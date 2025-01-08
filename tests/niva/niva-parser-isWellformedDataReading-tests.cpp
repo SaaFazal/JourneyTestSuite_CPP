@@ -23,6 +23,15 @@ BOOST_AUTO_TEST_CASE( WellFormedMixedCaseFormatCodes )
     BOOST_CHECK( isWellformedDataReading("#NuNo|2000-01-11T01:10:05Z,56.89,-17.5,+51.4|013;") );
 }
 
+BOOST_AUTO_TEST_CASE( WellFormedDifferentFormatCodeLengths )
+{
+    BOOST_CHECK( isWellformedDataReading("#X|1|100;") );
+    BOOST_CHECK( isWellformedDataReading("#JO|77,88,99|100;") );
+    BOOST_CHECK( isWellformedDataReading("#AZI|33,44,55,66|100;") );
+    BOOST_CHECK( isWellformedDataReading("#SIMON|1,2,3,4,5|100;") );
+    BOOST_CHECK( isWellformedDataReading("#DORATHA|0,0,0|100;") );
+}
+
 BOOST_AUTO_TEST_CASE( IncorrectStartSymbol )
 {
     BOOST_CHECK( ! isWellformedDataReading("!NEIL|+45.67,-23.24,231.56|105;") );
@@ -46,11 +55,6 @@ BOOST_AUTO_TEST_CASE( MissingFormatCode )
 BOOST_AUTO_TEST_CASE( MissingChecksum )
 {
     BOOST_CHECK( ! isWellformedDataReading("#NEIL|+45.67,-23.24,231.56|;") );
-}
-
-BOOST_AUTO_TEST_CASE( InvalidFormatCodeLength )
-{
-    BOOST_CHECK( ! isWellformedDataReading("#SIMON|77,88,99|100;") );
 }
 
 BOOST_AUTO_TEST_CASE( InvalidChecksumLength )

@@ -28,10 +28,6 @@ BOOST_AUTO_TEST_CASE( UnrecognisedFormats )
 {
     BOOST_CHECK( ! isKnownFormat("THOM") );
     BOOST_CHECK( ! isKnownFormat("TAHA") );
-}
-
-BOOST_AUTO_TEST_CASE( FormatsWrongLengths )
-{
     BOOST_CHECK( ! isKnownFormat("AZI") );
     BOOST_CHECK( ! isKnownFormat("PETER") );
     BOOST_CHECK( ! isKnownFormat("BRADLEY") );
