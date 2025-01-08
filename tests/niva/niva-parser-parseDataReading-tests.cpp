@@ -20,7 +20,7 @@ void checkDataReadingEqual(const NIVA::DataReading & actual, const NIVA::DataRea
 
 BOOST_AUTO_TEST_CASE( NEIL )
 {
-    const std::string nivaReadingText = "~NEIL|+45.67,-23.24,231.56|028;";
+    const std::string nivaReadingText = "#NEIL|+45.67,-23.24,231.56|028;";
     const DataReading expectedData = { "NEIL", {"+45.67","-23.24","231.56"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE( NEIL )
 
 BOOST_AUTO_TEST_CASE( ISMA )
 {
-    const std::string nivaReadingText = "~ISMA|78o36'45'',N,23o42'56'',E,23.62|047;";
+    const std::string nivaReadingText = "#ISMA|78o36'45'',N,23o42'56'',E,23.62|047;";
     const DataReading expectedData = { "ISMA", {"78o36'45''","N","23o42'56''","E","23.62"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE( ISMA )
 
 BOOST_AUTO_TEST_CASE( NUNO )
 {
-    const std::string nivaReadingText = "~NUNO|2000-01-11T01:10:05Z,56.89,-17.5,+51.4|013;";
+    const std::string nivaReadingText = "#NUNO|2000-01-11T01:10:05Z,56.89,-17.5,+51.4|013;";
     const DataReading expectedData = { "NUNO", {"2000-01-11T01:10:05Z","56.89","-17.5","+51.4"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE( NUNO )
 
 BOOST_AUTO_TEST_CASE( UnrecognisedFormat )
 {
-    const std::string nivaReadingText = "~DAVE|NNW,40mph,14:21:58|045;";
+    const std::string nivaReadingText = "#DAVE|NNW,40mph,14:21:58|045;";
     const DataReading expectedData = { "DAVE", {"NNW","40mph","14:21:58"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE( UnrecognisedFormat )
 
 BOOST_AUTO_TEST_CASE( JustOneField )
 {
-    const std::string nivaReadingText = "~XXXX|abc|096;";
+    const std::string nivaReadingText = "#XXXX|abc|096;";
     const DataReading expectedData = { "XXXX", {"abc"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE( JustOneField )
 
 BOOST_AUTO_TEST_CASE( SomeEmptyFields )
 {
-    const std::string nivaReadingText = "~XXXX|abc,,20,|078;";
+    const std::string nivaReadingText = "#XXXX|abc,,20,|078;";
     const DataReading expectedData = { "XXXX", { "abc", "", "20", "" } };
 
     DataReading actualData = parseDataReading(nivaReadingText);
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE( SomeEmptyFields )
 
 BOOST_AUTO_TEST_CASE( NonCapitalisedFormatCode )
 {
-    const std::string nivaReadingText = "~neil|+45.67,-23.24,231.56|028;";
+    const std::string nivaReadingText = "#neil|+45.67,-23.24,231.56|028;";
     const DataReading expectedData = { "NEIL", {"+45.67","-23.24","231.56"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
