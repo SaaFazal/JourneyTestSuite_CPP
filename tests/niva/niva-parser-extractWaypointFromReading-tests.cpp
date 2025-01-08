@@ -58,6 +58,34 @@ BOOST_AUTO_TEST_CASE( ISMA_SE )
     BOOST_CHECK_CLOSE( actualWaypoint.altitude() , expectedAltitude , percentageAccuracy );
 }
 
+BOOST_AUTO_TEST_CASE( VISHAL_NE )
+{
+    const DataReading dataEntry = { "VISHAL", {"09:33:21","28o50'17''","N","42o8'24''","E","56.89"} };
+    const degrees expectedLatitude = 28.838056;
+    const degrees expectedLongitude = 42.14;
+    const degrees expectedAltitude = 56.89;
+
+    Waypoint actualWaypoint = extractWaypointFromReading(dataEntry);
+
+    BOOST_CHECK_CLOSE( actualWaypoint.latitude() , expectedLatitude , percentageAccuracy );
+    BOOST_CHECK_CLOSE( actualWaypoint.longitude() , expectedLongitude , percentageAccuracy );
+    BOOST_CHECK_CLOSE( actualWaypoint.altitude() , expectedAltitude , percentageAccuracy );
+}
+
+BOOST_AUTO_TEST_CASE( VISHAL_SW )
+{
+    const DataReading dataEntry = { "VISHAL", {"09:33:21","52o34'45''","S","11o27'36''","W","234.7"} };
+    const degrees expectedLatitude = -52.579167;
+    const degrees expectedLongitude = -11.46;
+    const degrees expectedAltitude = 234.7;
+
+    Waypoint actualWaypoint = extractWaypointFromReading(dataEntry);
+
+    BOOST_CHECK_CLOSE( actualWaypoint.latitude() , expectedLatitude , percentageAccuracy );
+    BOOST_CHECK_CLOSE( actualWaypoint.longitude() , expectedLongitude , percentageAccuracy );
+    BOOST_CHECK_CLOSE( actualWaypoint.altitude() , expectedAltitude , percentageAccuracy );
+}
+
 BOOST_AUTO_TEST_CASE( NegativeAltitude )
 {
     const DataReading dataEntry = { "NEIL", {"+45.67","-23.24","-456.8","19:44:21"} };
