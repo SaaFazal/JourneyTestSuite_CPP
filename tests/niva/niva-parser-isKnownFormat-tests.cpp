@@ -19,13 +19,9 @@ BOOST_AUTO_TEST_CASE( ISMA_IsKnownFormat )
     BOOST_CHECK( isKnownFormat("ISMA") );
 }
 
-BOOST_AUTO_TEST_CASE( NUNO_IsKnownFormat )
-{
-    BOOST_CHECK( isKnownFormat("NUNO") );
-}
-
 BOOST_AUTO_TEST_CASE( UnrecognisedFormats )
 {
+    BOOST_CHECK( ! isKnownFormat("NUNO") );
     BOOST_CHECK( ! isKnownFormat("THOM") );
     BOOST_CHECK( ! isKnownFormat("TAHA") );
     BOOST_CHECK( ! isKnownFormat("AZI") );
