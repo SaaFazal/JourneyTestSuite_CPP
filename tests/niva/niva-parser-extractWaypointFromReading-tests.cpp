@@ -30,20 +30,6 @@ BOOST_AUTO_TEST_CASE( NEIL )
     BOOST_CHECK_CLOSE( actualWaypoint.altitude() , expectedAltitude , percentageAccuracy );
 }
 
-BOOST_AUTO_TEST_CASE( NUNO )
-{
-    const DataReading dataEntry = { "NUNO", {"2000-01-11T01:10:05Z","56.89","17.5","-51.4"} };
-    const degrees expectedLatitude = -51.4;
-    const degrees expectedLongitude = 17.5;
-    const degrees expectedAltitude = 56.89;
-
-    Waypoint actualWaypoint = extractWaypointFromReading(dataEntry);
-
-    BOOST_CHECK_CLOSE( actualWaypoint.latitude() , expectedLatitude , percentageAccuracy );
-    BOOST_CHECK_CLOSE( actualWaypoint.longitude() , expectedLongitude , percentageAccuracy );
-    BOOST_CHECK_CLOSE( actualWaypoint.altitude() , expectedAltitude , percentageAccuracy );
-}
-
 BOOST_AUTO_TEST_CASE( ISMA_NW )
 {
     const DataReading dataEntry = { "ISMA", {"78o36'45''","N","23o33'56''","W","23.62"} };

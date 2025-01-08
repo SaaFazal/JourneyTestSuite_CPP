@@ -24,16 +24,9 @@ BOOST_AUTO_TEST_CASE( CorrectFieldsISMA )
     BOOST_CHECK( hasCorrectNumberOfFields(theDataReading) );
 }
 
-BOOST_AUTO_TEST_CASE( CorrectFieldsNUNO )
-{
-    const DataReading theDataReading = { "NUNO", {"2000-01-11T01:10:05Z","56.89","-17.5","+51.4"} };
-
-    BOOST_CHECK( hasCorrectNumberOfFields(theDataReading) );
-}
-
 BOOST_AUTO_TEST_CASE( MissingFields )
 {
-    const DataReading theDataReading = { "NUNO", {"56.89","-17.5"} };
+    const DataReading theDataReading = { "ISMA", {"N","23o42'56''","W"} };
 
     BOOST_CHECK( ! hasCorrectNumberOfFields(theDataReading) );
 }

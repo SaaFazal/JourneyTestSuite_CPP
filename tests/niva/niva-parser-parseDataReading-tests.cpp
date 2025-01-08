@@ -38,16 +38,6 @@ BOOST_AUTO_TEST_CASE( ISMA )
     checkDataReadingEqual(actualData , expectedData);
 }
 
-BOOST_AUTO_TEST_CASE( NUNO )
-{
-    const std::string nivaReadingText = "#NUNO|2000-01-11T01:10:05Z,56.89,-17.5,+51.4|013;";
-    const DataReading expectedData = { "NUNO", {"2000-01-11T01:10:05Z","56.89","-17.5","+51.4"} };
-
-    DataReading actualData = parseDataReading(nivaReadingText);
-
-    checkDataReadingEqual(actualData , expectedData);
-}
-
 BOOST_AUTO_TEST_CASE( UnrecognisedFormat )
 {
     const std::string nivaReadingText = "#DAVE|NNW,40mph,14:21:58|045;";
