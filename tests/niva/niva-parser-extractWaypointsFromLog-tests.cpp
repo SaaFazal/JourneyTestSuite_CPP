@@ -15,9 +15,9 @@ BOOST_AUTO_TEST_SUITE( ExtractWaypointsFromLog )
 
 const double percentageAccuracy = 0.0001;
 
-const std::string validNEILdata = "~NEIL|+45.67,-23.24,231.56|028;";
-const std::string validISMAdata = "~Isma|78o36'45'',N,23o42'56'',W,23.62|061;";
-const std::string validNUNOdata = "~nuno|2000-01-11T01:10:05Z,56.89,-17.5,+51.4|013;";
+const std::string validNEILdata = "#NEIL|+45.67,-23.24,231.56|028;";
+const std::string validISMAdata = "#Isma|78o36'45'',N,23o42'56'',W,23.62|061;";
+const std::string validNUNOdata = "#nuno|2000-01-11T01:10:05Z,56.89,-17.5,+51.4|013;";
 
 const GPS::Waypoint waypointNEIL = GPS::Waypoint(45.67,-23.24,231.56);
 const GPS::Waypoint waypointISMA = GPS::Waypoint(78.6125,-23.715556,23.62);
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE( IgnoringWhiteSpace )
 BOOST_AUTO_TEST_CASE( IllFormedNIVAdataEntries )
 {
     std::stringstream dataLog;
-    dataLog << validNEILdata << "~2345;" << validISMAdata << "~NUNO|23,A|;" << std::endl;
+    dataLog << validNEILdata << "#2345;" << validISMAdata << "#NUNO|23,A|;" << std::endl;
     const unsigned int expectedSize = 2;
 
     std::vector<Waypoint> waypoints = extractWaypointsFromLog(dataLog);
@@ -90,8 +90,8 @@ BOOST_AUTO_TEST_CASE( IllFormedNIVAdataEntries )
 
 BOOST_AUTO_TEST_CASE( ValidChecksumsAreNotRequired )
 {
-    const std::string invalidChecksumdataNEIL = "~NEIL|+45.67,-23.24,231.56|100;";
-    const std::string invalidChecksumdataISMA = "~ISMA|78o36'45'',N,23o42'56'',W,23.62|074;";
+    const std::string invalidChecksumdataNEIL = "#NEIL|+45.67,-23.24,231.56|100;";
+    const std::string invalidChecksumdataISMA = "#ISMA|78o36'45'',N,23o42'56'',W,23.62|074;";
     std::stringstream dataLog;
     dataLog << invalidChecksumdataNEIL << invalidChecksumdataISMA << std::endl;
     const unsigned int expectedSize = 2;
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE( IllformedStructureButValidChecksum )
 
 BOOST_AUTO_TEST_CASE( UnrecognisedFormat )
 {
-    const std::string unrecognisedNIVAentry = "~PETE|NNW,40mph,14:21:58|058;";
+    const std::string unrecognisedNIVAentry = "#PETE|NNW,40mph,14:21:58|058;";
     std::stringstream dataLog;
     dataLog << validISMAdata << unrecognisedNIVAentry << validNEILdata << std::endl;
     const unsigned int expectedSize = 2;
@@ -127,9 +127,9 @@ BOOST_AUTO_TEST_CASE( UnrecognisedFormat )
 
 BOOST_AUTO_TEST_CASE( MissingFields )
 {
-    const std::string missingFieldsNEILdata = "~NEIL|+45.67,231.56|052;";
-    const std::string missingFieldsISMAdata = "~ISMA|78o36'45'',23o42'56'',23.62|036;";
-    const std::string missingFieldsNUNOdata = "~NUNO|56.89,-17.5,+51.4|041;";
+    const std::string missingFieldsNEILdata = "#NEIL|+45.67,231.56|052;";
+    const std::string missingFieldsISMAdata = "#ISMA|78o36'45'',23o42'56'',23.62|036;";
+    const std::string missingFieldsNUNOdata = "#NUNO|56.89,-17.5,+51.4|041;";
 
     std::stringstream dataLog;
     dataLog << validISMAdata << missingFieldsNEILdata << validNEILdata << missingFieldsISMAdata
@@ -143,9 +143,9 @@ BOOST_AUTO_TEST_CASE( MissingFields )
 
 BOOST_AUTO_TEST_CASE( ExtraFields )
 {
-    const std::string extraFieldsNEILdata = "~NEIL|+45.67,-23.24,231.56,15/07/87|028;";
-    const std::string extraFieldsISMAdata = "~ISMA|23/11/06,78o36'45'',N,23o42'56'',W,23.62|061;";
-    const std::string extraFieldsNUNOdata = "~NUNO|2000-01-11T01:10:05Z,56.89,-17.5,+51.4,A|013;";
+    const std::string extraFieldsNEILdata = "#NEIL|+45.67,-23.24,231.56,15/07/87|028;";
+    const std::string extraFieldsISMAdata = "#ISMA|23/11/06,78o36'45'',N,23o42'56'',W,23.62|061;";
+    const std::string extraFieldsNUNOdata = "#NUNO|2000-01-11T01:10:05Z,56.89,-17.5,+51.4,A|013;";
 
     std::stringstream dataLog;
     dataLog << validISMAdata << extraFieldsNEILdata << validNEILdata << extraFieldsISMAdata
@@ -159,9 +159,9 @@ BOOST_AUTO_TEST_CASE( ExtraFields )
 
 BOOST_AUTO_TEST_CASE( InvalidFields )
 {
-    const std::string invalidFieldsNEILdata = "~NEIL|+97.67,-23.24,231.56|019;"; // latitude > 90o
-    const std::string invalidFieldsNUNOdata = "~NUNO|2000-01-11T01:10:05Z,126.89,-274.5,+51.4|012;"; // longitude > 180o
-    const std::string invalidFieldsISMAdata = "~ISMA|7836'45'',N,23o42'56'',W,23.62|082;"; // missing o
+    const std::string invalidFieldsNEILdata = "#NEIL|+97.67,-23.24,231.56|019;"; // latitude > 90o
+    const std::string invalidFieldsNUNOdata = "#NUNO|2000-01-11T01:10:05Z,126.89,-274.5,+51.4|012;"; // longitude > 180o
+    const std::string invalidFieldsISMAdata = "#ISMA|7836'45'',N,23o42'56'',W,23.62|082;"; // missing o
 
     std::stringstream dataLog;
     dataLog << validISMAdata << invalidFieldsNEILdata << validNEILdata << invalidFieldsISMAdata
