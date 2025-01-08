@@ -24,6 +24,13 @@ BOOST_AUTO_TEST_CASE( CorrectFieldsISMA )
     BOOST_CHECK( hasCorrectNumberOfFields(theDataReading) );
 }
 
+BOOST_AUTO_TEST_CASE( CorrectFieldsALICIA )
+{
+    const DataReading theDataReading = { "ALICIA", {"78o36.75'","N","23o42.9333'","W","23.62"} };
+
+    BOOST_CHECK( hasCorrectNumberOfFields(theDataReading) );
+}
+
 BOOST_AUTO_TEST_CASE( CorrectFieldsVISHAL )
 {
     const DataReading theDataReading = { "VISHAL", {"09:33:21","78o36'45''","N","23o13'56''","E","56.89"} };

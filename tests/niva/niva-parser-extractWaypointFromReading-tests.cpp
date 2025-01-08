@@ -58,6 +58,34 @@ BOOST_AUTO_TEST_CASE( ISMA_SE )
     BOOST_CHECK_CLOSE( actualWaypoint.altitude() , expectedAltitude , percentageAccuracy );
 }
 
+BOOST_AUTO_TEST_CASE( ALICIA_NW )
+{
+    const DataReading dataEntry = { "ALICIA", {"78o36.75'","N","23o33.9333'","W","23.62"} };
+    const degrees expectedLatitude = 78.6125;
+    const degrees expectedLongitude = -23.565556;
+    const degrees expectedAltitude = 23.62;
+
+    Waypoint actualWaypoint = extractWaypointFromReading(dataEntry);
+
+    BOOST_CHECK_CLOSE( actualWaypoint.latitude() , expectedLatitude , percentageAccuracy );
+    BOOST_CHECK_CLOSE( actualWaypoint.longitude() , expectedLongitude , percentageAccuracy );
+    BOOST_CHECK_CLOSE( actualWaypoint.altitude() , expectedAltitude , percentageAccuracy );
+}
+
+BOOST_AUTO_TEST_CASE( ALICIA_SE )
+{
+    const DataReading dataEntry = { "ALICIA", {"22o47.05'","S","38o14.7167'","E","467.21"} };
+    const degrees expectedLatitude = -22.784167;
+    const degrees expectedLongitude = 38.245278;
+    const degrees expectedAltitude = 467.21;
+
+    Waypoint actualWaypoint = extractWaypointFromReading(dataEntry);
+
+    BOOST_CHECK_CLOSE( actualWaypoint.latitude() , expectedLatitude , percentageAccuracy );
+    BOOST_CHECK_CLOSE( actualWaypoint.longitude() , expectedLongitude , percentageAccuracy );
+    BOOST_CHECK_CLOSE( actualWaypoint.altitude() , expectedAltitude , percentageAccuracy );
+}
+
 BOOST_AUTO_TEST_CASE( VISHAL_NE )
 {
     const DataReading dataEntry = { "VISHAL", {"09:33:21","28o50'17''","N","42o8'24''","E","56.89"} };
@@ -219,6 +247,62 @@ BOOST_AUTO_TEST_CASE( InvalidDMSText_missingSecondsSymbol_lat )
 BOOST_AUTO_TEST_CASE( InvalidDMSText_not_numeric_lat )
 {
     const DataReading dataEntry = { "ISMAHANE", {"up here","S","38o14'26''","E","467.21"} };
+
+    BOOST_CHECK_THROW( extractWaypointFromReading(dataEntry) , std::domain_error );
+}
+
+BOOST_AUTO_TEST_CASE( InvalidDDMText_negative_lon )
+{
+    const DataReading dataEntry = { "ALICIA", {"22o47.05'","S","-38o14.7167'","E","467.21"} };
+
+    BOOST_CHECK_THROW( extractWaypointFromReading(dataEntry) , std::domain_error );
+}
+
+BOOST_AUTO_TEST_CASE( InvalidDDMText_missingDegreesSymbol_lon )
+{
+    const DataReading dataEntry = { "ALICIA", {"22o47.05'","S","3814.7167'","E","467.21"} };
+
+    BOOST_CHECK_THROW( extractWaypointFromReading(dataEntry) , std::domain_error );
+}
+
+BOOST_AUTO_TEST_CASE( InvalidDDMText_missingMinutesSymbol_lon )
+{
+    const DataReading dataEntry = { "ALICIA", {"22o47.05'","S","38o14.7167","E","467.21"} };
+
+    BOOST_CHECK_THROW( extractWaypointFromReading(dataEntry) , std::domain_error );
+}
+
+BOOST_AUTO_TEST_CASE( InvalidDDMText_not_numeric_lon )
+{
+    const DataReading dataEntry = { "ALICIA", {"22o47.05'","S","over there","E","467.21"} };
+
+    BOOST_CHECK_THROW( extractWaypointFromReading(dataEntry) , std::domain_error );
+}
+
+BOOST_AUTO_TEST_CASE( InvalidDDMText_negative_lat )
+{
+    const DataReading dataEntry = { "ALICIA", {"-22o47.05'","S","38o14.7167'","E","467.21"} };
+
+    BOOST_CHECK_THROW( extractWaypointFromReading(dataEntry) , std::domain_error );
+}
+
+BOOST_AUTO_TEST_CASE( InvalidDDMText_missingDegreesSymbol_lat )
+{
+    const DataReading dataEntry = { "ALICIA", {"2247.05'","S","38o14.7167'","E","467.21"} };
+
+    BOOST_CHECK_THROW( extractWaypointFromReading(dataEntry) , std::domain_error );
+}
+
+BOOST_AUTO_TEST_CASE( InvalidDDMText_missingMinutesSymbol_lat )
+{
+    const DataReading dataEntry = { "ALICIA", {"22o47.05","S","38o14.7167'","E","467.21"} };
+
+    BOOST_CHECK_THROW( extractWaypointFromReading(dataEntry) , std::domain_error );
+}
+
+BOOST_AUTO_TEST_CASE( InvalidDDMText_not_numeric_lat )
+{
+    const DataReading dataEntry = { "ALICIA", {"up here","S","38o14.7167'","E","467.21"} };
 
     BOOST_CHECK_THROW( extractWaypointFromReading(dataEntry) , std::domain_error );
 }
