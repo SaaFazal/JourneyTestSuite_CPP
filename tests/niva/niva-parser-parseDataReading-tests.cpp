@@ -38,6 +38,16 @@ BOOST_AUTO_TEST_CASE( ISMA )
     checkDataReadingEqual(actualData , expectedData);
 }
 
+BOOST_AUTO_TEST_CASE( VISHAL )
+{
+    const std::string nivaReadingText = "#VISHAL[09:33:21,78o36'45'',N,23o13'56'',W,56.89]18;";
+    const DataReading expectedData = { "VISHAL", {"09:33:21","78o36'45''","N","23o13'56''","W","56.89"} };
+
+    DataReading actualData = parseDataReading(nivaReadingText);
+
+    checkDataReadingEqual(actualData , expectedData);
+}
+
 BOOST_AUTO_TEST_CASE( UnrecognisedFormat )
 {
     const std::string nivaReadingText = "#DAVE[NNW,40mph,14:21:58]2D;";

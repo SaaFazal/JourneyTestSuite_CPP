@@ -17,9 +17,11 @@ const double percentageAccuracy = 0.0001;
 
 const std::string validNEILdata = "#NEIL[+45.67,-23.24,231.56,19:44:21]3B;";
 const std::string validISMAdata = "#Ismahane[78o36'45'',N,23o42'56'',W,23.62]3D;";
+const std::string validVISHALdata = "#VISHAL[09:33:21,78o36'45'',S,23o13'56'',E,56.89]17;";
 
 const GPS::Waypoint waypointNEIL = GPS::Waypoint(45.67,-23.24,231.56);
 const GPS::Waypoint waypointISMA = GPS::Waypoint(78.6125,-23.715556,23.62);
+const GPS::Waypoint waypointVISHAL = GPS::Waypoint(-78.6125,23.232222,56.89);
 
 BOOST_AUTO_TEST_CASE( EmptyLog )
 {
@@ -50,8 +52,8 @@ BOOST_AUTO_TEST_CASE( OneValidEntry )
 BOOST_AUTO_TEST_CASE( ThreeValidEntries )
 {
     std::stringstream dataLog;
-    dataLog << validNEILdata << validISMAdata;
-    const std::vector<Waypoint> expectedWaypoints = { waypointNEIL, waypointISMA};
+    dataLog << validNEILdata << validISMAdata << validVISHALdata;
+    const std::vector<Waypoint> expectedWaypoints = { waypointNEIL, waypointISMA, waypointVISHAL};
 
     std::vector<Waypoint> actualWaypoints = extractWaypointsFromLog(dataLog);
 
@@ -127,9 +129,10 @@ BOOST_AUTO_TEST_CASE( MissingFields )
 {
     const std::string missingFieldsNEILdata = "#NEIL[+45.67,231.56,19:44:21]13;";
     const std::string missingFieldsISMAdata = "#ISMAHANE[78o36'45'',23o42'56'',23.62]24;";
+    const std::string missingFieldsVISHALdata = "#VISHAL[09:33:21,78o36'45'',S,23o13'56'',E]17;";
 
     std::stringstream dataLog;
-    dataLog << validISMAdata << missingFieldsNEILdata << validNEILdata << missingFieldsISMAdata << std::endl;
+    dataLog << validISMAdata << missingFieldsNEILdata << validNEILdata << missingFieldsISMAdata << missingFieldsVISHALdata << std::endl;
     const unsigned int expectedSize = 2;
 
     std::vector<Waypoint> waypoints = extractWaypointsFromLog(dataLog);
@@ -141,9 +144,10 @@ BOOST_AUTO_TEST_CASE( ExtraFields )
 {
     const std::string extraFieldsNEILdata = "#NEIL[+45.67,-23.24,231.56,19:44:21,15/07/87]1B;";
     const std::string extraFieldsISMAdata = "#ISMAHANE[23/11/06,78o36'45'',N,23o42'56'',W,23.62]3D;";
+    const std::string extraFieldsVISHALdata = "#VISHAL[09:33:21,30/06/17,78o36'45'',S,23o13'56'',E,56.89]17;";
 
     std::stringstream dataLog;
-    dataLog << validISMAdata << extraFieldsNEILdata << validNEILdata << extraFieldsISMAdata << std::endl;
+    dataLog << validISMAdata << extraFieldsNEILdata << validNEILdata << extraFieldsISMAdata << extraFieldsVISHALdata << std::endl;
     const unsigned int expectedSize = 2;
 
     std::vector<Waypoint> waypoints = extractWaypointsFromLog(dataLog);
@@ -155,6 +159,7 @@ BOOST_AUTO_TEST_CASE( InvalidFields )
 {
     const std::string invalidFieldsNEILdata = "#NEIL[+97.67,-23.24,231.56,19:44:21]34;"; // latitude > 90o
     const std::string invalidFieldsISMAdata = "#ISMAHANE[7836'45'',N,23o42'56'',W,23.62]52;"; // missing o
+    const std::string invalidFieldsVISHALdata = "#VISHAL[09:33:21,78o36'45'',S,23o13'56,E,56.89]17;"; // missing ''
 
     std::stringstream dataLog;
     dataLog << validISMAdata << invalidFieldsNEILdata << validNEILdata << invalidFieldsISMAdata << std::endl;

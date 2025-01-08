@@ -24,6 +24,13 @@ BOOST_AUTO_TEST_CASE( CorrectFieldsISMA )
     BOOST_CHECK( hasCorrectNumberOfFields(theDataReading) );
 }
 
+BOOST_AUTO_TEST_CASE( CorrectFieldsVISHAL )
+{
+    const DataReading theDataReading = { "VISHAL", {"09:33:21","78o36'45''","N","23o13'56''","E","56.89"} };
+
+    BOOST_CHECK( hasCorrectNumberOfFields(theDataReading) );
+}
+
 BOOST_AUTO_TEST_CASE( MissingFields )
 {
     const DataReading theDataReading = { "ISMAHANE", {"N","23o42'56''","W"} };

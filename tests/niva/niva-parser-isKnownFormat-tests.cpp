@@ -19,6 +19,11 @@ BOOST_AUTO_TEST_CASE( ISMA_IsKnownFormat )
     BOOST_CHECK( isKnownFormat("ISMAHANE") );
 }
 
+BOOST_AUTO_TEST_CASE( VISHAL_IsKnownFormat )
+{
+    BOOST_CHECK( isKnownFormat("VISHAL") );
+}
+
 BOOST_AUTO_TEST_CASE( UnrecognisedFormats )
 {
     BOOST_CHECK( ! isKnownFormat("NUNO") );
@@ -33,6 +38,7 @@ BOOST_AUTO_TEST_CASE( UncapitalisedFormats )
 {
     BOOST_CHECK( isKnownFormat("Neil") );
     BOOST_CHECK( isKnownFormat("Ismahane") );
+    BOOST_CHECK( isKnownFormat("Vishal") );
 }
 
 BOOST_AUTO_TEST_CASE( FormatCodesVeryShort )
