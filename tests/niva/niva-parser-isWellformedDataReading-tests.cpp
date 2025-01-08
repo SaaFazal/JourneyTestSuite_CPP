@@ -12,13 +12,13 @@ BOOST_AUTO_TEST_SUITE( IsWellformedDataReading )
 BOOST_AUTO_TEST_CASE( WellFormedTypicalDataReadings )
 {
     BOOST_CHECK( isWellformedDataReading("#NEIL[+45.67,-23.24,231.56,19:44:21]3B;") );
-    BOOST_CHECK( isWellformedDataReading("#ISMA[78o36'45'',N,23o42'56'',W,23.62]43;") );
+    BOOST_CHECK( isWellformedDataReading("#ISMAHANE[78o36'45'',N,23o42'56'',W,23.62]43;") );
 }
 
 BOOST_AUTO_TEST_CASE( WellFormedMixedCaseFormatCodes )
 {
     BOOST_CHECK( isWellformedDataReading("#neil[+45.67,-23.24,231.56,19:44:21]3B;") );
-    BOOST_CHECK( isWellformedDataReading("#IsmA[78o36'45'',N,23o42'56'',W,23.62]43;") );
+    BOOST_CHECK( isWellformedDataReading("#IsmaHane[78o36'45'',N,23o42'56'',W,23.62]43;") );
 }
 
 BOOST_AUTO_TEST_CASE( WellFormedDifferentFormatCodeLengths )

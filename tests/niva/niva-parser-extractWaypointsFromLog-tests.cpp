@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_SUITE( ExtractWaypointsFromLog )
 const double percentageAccuracy = 0.0001;
 
 const std::string validNEILdata = "#NEIL[+45.67,-23.24,231.56,19:44:21]3B;";
-const std::string validISMAdata = "#Isma[78o36'45'',N,23o42'56'',W,23.62]3D;";
+const std::string validISMAdata = "#Ismahane[78o36'45'',N,23o42'56'',W,23.62]3D;";
 
 const GPS::Waypoint waypointNEIL = GPS::Waypoint(45.67,-23.24,231.56);
 const GPS::Waypoint waypointISMA = GPS::Waypoint(78.6125,-23.715556,23.62);
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE( IllFormedNIVAdataEntries )
 BOOST_AUTO_TEST_CASE( ValidChecksumsAreRequired )
 {
     const std::string invalidChecksumdataNEIL = "#NEIL[+45.67,-23.24,231.56,19:44:21]71;";
-    const std::string invalidChecksumdataISMA = "#ISMA[78o36'45'',N,23o42'56'',W,23.62]4A;";
+    const std::string invalidChecksumdataISMA = "#ISMAHANE[78o36'45'',N,23o42'56'',W,23.62]4A;";
     std::stringstream dataLog;
     dataLog << invalidChecksumdataNEIL << invalidChecksumdataISMA << std::endl;
     const unsigned int expectedSize = 0;
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE( UnrecognisedFormat )
 BOOST_AUTO_TEST_CASE( MissingFields )
 {
     const std::string missingFieldsNEILdata = "#NEIL[+45.67,231.56,19:44:21]13;";
-    const std::string missingFieldsISMAdata = "#ISMA[78o36'45'',23o42'56'',23.62]24;";
+    const std::string missingFieldsISMAdata = "#ISMAHANE[78o36'45'',23o42'56'',23.62]24;";
 
     std::stringstream dataLog;
     dataLog << validISMAdata << missingFieldsNEILdata << validNEILdata << missingFieldsISMAdata << std::endl;
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE( MissingFields )
 BOOST_AUTO_TEST_CASE( ExtraFields )
 {
     const std::string extraFieldsNEILdata = "#NEIL[+45.67,-23.24,231.56,19:44:21,15/07/87]1B;";
-    const std::string extraFieldsISMAdata = "#ISMA[23/11/06,78o36'45'',N,23o42'56'',W,23.62]3D;";
+    const std::string extraFieldsISMAdata = "#ISMAHANE[23/11/06,78o36'45'',N,23o42'56'',W,23.62]3D;";
 
     std::stringstream dataLog;
     dataLog << validISMAdata << extraFieldsNEILdata << validNEILdata << extraFieldsISMAdata << std::endl;
@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE( ExtraFields )
 BOOST_AUTO_TEST_CASE( InvalidFields )
 {
     const std::string invalidFieldsNEILdata = "#NEIL[+97.67,-23.24,231.56,19:44:21]34;"; // latitude > 90o
-    const std::string invalidFieldsISMAdata = "#ISMA[7836'45'',N,23o42'56'',W,23.62]52;"; // missing o
+    const std::string invalidFieldsISMAdata = "#ISMAHANE[7836'45'',N,23o42'56'',W,23.62]52;"; // missing o
 
     std::stringstream dataLog;
     dataLog << validISMAdata << invalidFieldsNEILdata << validNEILdata << invalidFieldsISMAdata << std::endl;
