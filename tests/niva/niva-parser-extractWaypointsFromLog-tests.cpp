@@ -86,13 +86,13 @@ BOOST_AUTO_TEST_CASE( IllFormedNIVAdataEntries )
     BOOST_CHECK_EQUAL( waypoints.size() , expectedSize );
 }
 
-BOOST_AUTO_TEST_CASE( ValidChecksumsAreNotRequired )
+BOOST_AUTO_TEST_CASE( ValidChecksumsAreRequired )
 {
     const std::string invalidChecksumdataNEIL = "#NEIL[+45.67,-23.24,231.56,19:44:21]71;";
     const std::string invalidChecksumdataISMA = "#ISMA[78o36'45'',N,23o42'56'',W,23.62]4A;";
     std::stringstream dataLog;
     dataLog << invalidChecksumdataNEIL << invalidChecksumdataISMA << std::endl;
-    const unsigned int expectedSize = 2;
+    const unsigned int expectedSize = 0;
 
     std::vector<Waypoint> waypoints = extractWaypointsFromLog(dataLog);
 

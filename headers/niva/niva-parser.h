@@ -44,7 +44,7 @@ GPS::Waypoint extractWaypointFromReading(const NIVA::DataReading& d);
 // Extracts the GPS location data from a stream of raw text NIVA readings.
 // The stream is assumed to be a sequence of NIVA data readings, optionally separated by whitespace.
 // Any text in the stream that is not a well-formed data reading is skipped.
-// Data readings with erroneous values in the fields are also skipped.
+// Data readings with erroneous values in the fields or mismatched checksums are also skipped.
 std::vector<GPS::Waypoint> extractWaypointsFromLog(std::istream& is);
 }
 
