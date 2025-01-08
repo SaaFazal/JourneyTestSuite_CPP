@@ -20,8 +20,8 @@ void checkDataReadingEqual(const NIVA::DataReading & actual, const NIVA::DataRea
 
 BOOST_AUTO_TEST_CASE( NEIL )
 {
-    const std::string nivaReadingText = "#NEIL|+45.67,-23.24,231.56|028;";
-    const DataReading expectedData = { "NEIL", {"+45.67","-23.24","231.56"} };
+    const std::string nivaReadingText = "#NEIL|+45.67,-23.24,231.56,19:44:21|059;";
+    const DataReading expectedData = { "NEIL", {"+45.67","-23.24","231.56","19:44:21"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
 
@@ -80,8 +80,8 @@ BOOST_AUTO_TEST_CASE( SomeEmptyFields )
 
 BOOST_AUTO_TEST_CASE( NonCapitalisedFormatCode )
 {
-    const std::string nivaReadingText = "#neil|+45.67,-23.24,231.56|028;";
-    const DataReading expectedData = { "NEIL", {"+45.67","-23.24","231.56"} };
+    const std::string nivaReadingText = "#neil|+45.67,-23.24,231.56,19:44:21|059;";
+    const DataReading expectedData = { "NEIL", {"+45.67","-23.24","231.56","19:44:21"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
 

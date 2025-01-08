@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE( EmptyData )
 
 BOOST_AUTO_TEST_CASE( TypicalData )
 {
-    BOOST_CHECK( hasMatchingChecksum("#NEIL|+45.67,-23.24,231.56|028;") );
+    BOOST_CHECK( hasMatchingChecksum("#NEIL|+45.67,-23.24,231.56,19:44:21|059;") );
 }
 
 BOOST_AUTO_TEST_CASE( SingleCharacterDataIncorrectChecksum )
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE( SingleCharacterDataIncorrectChecksum )
 
 BOOST_AUTO_TEST_CASE( TypicalDataIncorrectChecksum )
 {
-    BOOST_CHECK( ! hasMatchingChecksum("#NEIL|+45.67,-23.24,231.56|018;") );
+    BOOST_CHECK( ! hasMatchingChecksum("#NEIL|+45.67,-23.24,231.56,19:44:21|018;") );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
