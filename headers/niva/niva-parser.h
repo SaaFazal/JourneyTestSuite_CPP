@@ -28,7 +28,7 @@ namespace GPS::NIVA
 
 
   // Check whether the (decimal notation) checksum value in the provided raw text of a NIVA data reading matches
-  // the checksum computed from the raw text between the vertical bars.
+  // the checksum computed from the raw text between the square brackets.
   // Pre-condition: the provided string is a well-formed NIVA data reading.
   bool hasMatchingChecksum(std::string);
 
