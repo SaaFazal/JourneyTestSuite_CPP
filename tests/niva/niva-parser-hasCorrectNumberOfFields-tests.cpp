@@ -19,21 +19,21 @@ BOOST_AUTO_TEST_CASE( CorrectFieldsNEIL )
 
 BOOST_AUTO_TEST_CASE( CorrectFieldsISMA )
 {
-    const DataReading theDataReading = { "ISMA", {"78o36'45''","N","23o42'56''","W","23.62"} };
+    const DataReading theDataReading = { "ISMAHANE", {"78o36'45''","N","23o42'56''","W","23.62"} };
 
     BOOST_CHECK( hasCorrectNumberOfFields(theDataReading) );
 }
 
 BOOST_AUTO_TEST_CASE( MissingFields )
 {
-    const DataReading theDataReading = { "ISMA", {"N","23o42'56''","W"} };
+    const DataReading theDataReading = { "ISMAHANE", {"N","23o42'56''","W"} };
 
     BOOST_CHECK( ! hasCorrectNumberOfFields(theDataReading) );
 }
 
 BOOST_AUTO_TEST_CASE( ExtraFields )
 {
-    const DataReading theDataReading = { "ISMA", {"78o36'45''","N","23o42'56''","E","23.62","17:43:07","14/08/74"} };
+    const DataReading theDataReading = { "ISMAHANE", {"78o36'45''","N","23o42'56''","E","23.62","17:43:07","14/08/74"} };
 
     BOOST_CHECK( ! hasCorrectNumberOfFields(theDataReading) );
 }

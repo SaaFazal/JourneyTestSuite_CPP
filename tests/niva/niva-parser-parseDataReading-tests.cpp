@@ -30,8 +30,8 @@ BOOST_AUTO_TEST_CASE( NEIL )
 
 BOOST_AUTO_TEST_CASE( ISMA )
 {
-    const std::string nivaReadingText = "#ISMA[78o36'45'',N,23o42'56'',E,23.62]2F;";
-    const DataReading expectedData = { "ISMA", {"78o36'45''","N","23o42'56''","E","23.62"} };
+    const std::string nivaReadingText = "#ISMAHANE[78o36'45'',N,23o42'56'',E,23.62]2F;";
+    const DataReading expectedData = { "ISMAHANE", {"78o36'45''","N","23o42'56''","E","23.62"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
 

@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE( NEIL_IsKnownFormat )
 
 BOOST_AUTO_TEST_CASE( ISMA_IsKnownFormat )
 {
-    BOOST_CHECK( isKnownFormat("ISMA") );
+    BOOST_CHECK( isKnownFormat("ISMAHANE") );
 }
 
 BOOST_AUTO_TEST_CASE( UnrecognisedFormats )
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE( UnrecognisedFormats )
 BOOST_AUTO_TEST_CASE( UncapitalisedFormats )
 {
     BOOST_CHECK( isKnownFormat("Neil") );
-    BOOST_CHECK( isKnownFormat("Isma") );
+    BOOST_CHECK( isKnownFormat("Ismahane") );
 }
 
 BOOST_AUTO_TEST_CASE( FormatCodesVeryShort )
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE( FormatCodesVeryLong )
 
 BOOST_AUTO_TEST_CASE( ExtraSuffixesNotAccepted )
 {
-    BOOST_CHECK( ! isKnownFormat("ISMAHANE") );
+    BOOST_CHECK( ! isKnownFormat("ISMAHANECHEHEB") );
 }
 
 BOOST_AUTO_TEST_CASE( ExtraPrefixesNotAccepted )
