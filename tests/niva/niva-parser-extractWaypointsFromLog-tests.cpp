@@ -18,10 +18,12 @@ const double percentageAccuracy = 0.0001;
 const std::string validNEILdata = "#NEIL[+45.67,-23.24,231.56,19:44:21]3B;";
 const std::string validISMAdata = "#Ismahane[78o36'45'',N,23o42'56'',W,23.62]3D;";
 const std::string validVISHALdata = "#VISHAL[09:33:21,78o36'45'',S,23o13'56'',E,56.89]17;";
+const std::string validALICIAdata = "#ALICIA[78o36.75',S,23o42.9333',W,28.90]2C;";
 
-const GPS::Waypoint waypointNEIL = GPS::Waypoint(45.67,-23.24,231.56);
-const GPS::Waypoint waypointISMA = GPS::Waypoint(78.6125,-23.715556,23.62);
-const GPS::Waypoint waypointVISHAL = GPS::Waypoint(-78.6125,23.232222,56.89);
+const GPS::Waypoint waypointNEIL = GPS::Waypoint(45.67, -23.24, 231.56);
+const GPS::Waypoint waypointISMA = GPS::Waypoint(78.6125, -23.715556, 23.62);
+const GPS::Waypoint waypointVISHAL = GPS::Waypoint(-78.6125, 23.232222, 56.89);
+const GPS::Waypoint waypointALICIA = GPS::Waypoint(-78.6125, -23.715556, 28.90);
 
 BOOST_AUTO_TEST_CASE( EmptyLog )
 {
@@ -49,11 +51,11 @@ BOOST_AUTO_TEST_CASE( OneValidEntry )
     BOOST_CHECK_CLOSE( actualWaypoint.altitude(), expectedWaypoint.altitude(), percentageAccuracy );
 }
 
-BOOST_AUTO_TEST_CASE( ThreeValidEntries )
+BOOST_AUTO_TEST_CASE( FourValidEntries )
 {
     std::stringstream dataLog;
-    dataLog << validNEILdata << validISMAdata << validVISHALdata;
-    const std::vector<Waypoint> expectedWaypoints = { waypointNEIL, waypointISMA, waypointVISHAL};
+    dataLog << validNEILdata << validISMAdata << validVISHALdata << validALICIAdata;
+    const std::vector<Waypoint> expectedWaypoints = { waypointNEIL, waypointISMA, waypointVISHAL, waypointALICIA};
 
     std::vector<Waypoint> actualWaypoints = extractWaypointsFromLog(dataLog);
 

@@ -24,6 +24,11 @@ BOOST_AUTO_TEST_CASE( VISHAL_IsKnownFormat )
     BOOST_CHECK( isKnownFormat("VISHAL") );
 }
 
+BOOST_AUTO_TEST_CASE( ALICIA_IsKnownFormat )
+{
+    BOOST_CHECK( isKnownFormat("ALICIA") );
+}
+
 BOOST_AUTO_TEST_CASE( UnrecognisedFormats )
 {
     BOOST_CHECK( ! isKnownFormat("NUNO") );
