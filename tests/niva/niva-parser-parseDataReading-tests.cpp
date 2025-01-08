@@ -20,7 +20,7 @@ void checkDataReadingEqual(const NIVA::DataReading & actual, const NIVA::DataRea
 
 BOOST_AUTO_TEST_CASE( NEIL )
 {
-    const std::string nivaReadingText = "#NEIL[+45.67,-23.24,231.56,19:44:21]059;";
+    const std::string nivaReadingText = "#NEIL[+45.67,-23.24,231.56,19:44:21]3B;";
     const DataReading expectedData = { "NEIL", {"+45.67","-23.24","231.56","19:44:21"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE( NEIL )
 
 BOOST_AUTO_TEST_CASE( ISMA )
 {
-    const std::string nivaReadingText = "#ISMA[78o36'45'',N,23o42'56'',E,23.62]047;";
+    const std::string nivaReadingText = "#ISMA[78o36'45'',N,23o42'56'',E,23.62]2F;";
     const DataReading expectedData = { "ISMA", {"78o36'45''","N","23o42'56''","E","23.62"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE( ISMA )
 
 BOOST_AUTO_TEST_CASE( UnrecognisedFormat )
 {
-    const std::string nivaReadingText = "#DAVE[NNW,40mph,14:21:58]045;";
+    const std::string nivaReadingText = "#DAVE[NNW,40mph,14:21:58]2D;";
     const DataReading expectedData = { "DAVE", {"NNW","40mph","14:21:58"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE( UnrecognisedFormat )
 
 BOOST_AUTO_TEST_CASE( JustOneField )
 {
-    const std::string nivaReadingText = "#XXXX[abc]096;";
+    const std::string nivaReadingText = "#XXXX[abc]60;";
     const DataReading expectedData = { "XXXX", {"abc"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE( JustOneField )
 
 BOOST_AUTO_TEST_CASE( SomeEmptyFields )
 {
-    const std::string nivaReadingText = "#XXXX[abc,,20,]078;";
+    const std::string nivaReadingText = "#XXXX[abc,,20,]4E;";
     const DataReading expectedData = { "XXXX", { "abc", "", "20", "" } };
 
     DataReading actualData = parseDataReading(nivaReadingText);
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE( SomeEmptyFields )
 
 BOOST_AUTO_TEST_CASE( NonCapitalisedFormatCode )
 {
-    const std::string nivaReadingText = "#neil[+45.67,-23.24,231.56,19:44:21]059;";
+    const std::string nivaReadingText = "#neil[+45.67,-23.24,231.56,19:44:21]3B;";
     const DataReading expectedData = { "NEIL", {"+45.67","-23.24","231.56","19:44:21"} };
 
     DataReading actualData = parseDataReading(nivaReadingText);
@@ -117,10 +117,10 @@ std::string formatMismatchedFieldData(const std::vector<std::string> & actualFie
 void checkDataReadingEqual(const NIVA::DataReading & actual, const NIVA::DataReading & expected)
 {
     BOOST_CHECK_MESSAGE( actual.format == expected.format,
-                         formatMismatchedFormatCode(actual.format, expected.format) );
+                        formatMismatchedFormatCode(actual.format, expected.format) );
 
     BOOST_CHECK_MESSAGE( actual.dataFields == expected.dataFields,
-                         formatMismatchedFieldData(actual.dataFields,expected.dataFields) );
+                        formatMismatchedFieldData(actual.dataFields,expected.dataFields) );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

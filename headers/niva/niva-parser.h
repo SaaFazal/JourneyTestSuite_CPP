@@ -18,10 +18,10 @@ bool isKnownFormat(const char* s);       // Overload for string literals
 bool isWellformedDataReading(const std::string& s); // Add this declaration
 
 // Compute the XOR reduction of all of the ASCII character codes in the provided raw text.
-unsigned int computeChecksum(const std::string& s); // For std::string
-unsigned int computeChecksum(const char* s);        // Overload for string literals
+unsigned int computeChecksum(const std::string& s); // For std::string, returns decimal value
+std::string computeChecksumHex(const std::string& s); // For std::string, returns hexadecimal string
 
-// Check whether the (decimal notation) checksum value in the provided raw text of a NIVA data reading matches
+// Check whether the (decimal or hexadecimal notation) checksum value in the provided raw text of a NIVA data reading matches
 // the checksum computed from the raw text between the vertical bars.
 // Pre-condition: the provided string is a well-formed NIVA data reading.
 bool hasMatchingChecksum(const std::string& s); // For std::string
