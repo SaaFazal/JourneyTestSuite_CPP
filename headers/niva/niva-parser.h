@@ -57,6 +57,7 @@ namespace GPS::NIVA
   // Extracts the GPS location data from a stream of raw text NIVA readings.
   // The stream is assummed to be a sequence of NIVA data readings, optionally separated by whitespace.
   // Any text in the stream that is not a well-formed data reading is skipped.
+  // Any readings without matching checksums are skipped.
   // Data readings with erroneus values in the fields are also skipped.
   std::vector<GPS::Waypoint> extractWaypointsFromLog(std::istream&);
 }
