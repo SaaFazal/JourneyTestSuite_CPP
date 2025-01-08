@@ -18,7 +18,7 @@ const double absoluteAccuracy = 0.0001;
 
 BOOST_AUTO_TEST_CASE( NEIL )
 {
-    const DataReading dataEntry = { "NEIL", {"+45.67","-23.24","231.56"} };
+    const DataReading dataEntry = { "NEIL", {"+45.67","-23.24","231.56","19:44:21"} };
     const degrees expectedLatitude = 45.67;
     const degrees expectedLongitude = -23.24;
     const degrees expectedAltitude = 231.56;
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE( ISMA_SE )
 
 BOOST_AUTO_TEST_CASE( NegativeAltitude )
 {
-    const DataReading dataEntry = { "NEIL", {"+45.67","-23.24","-456.8"} };
+    const DataReading dataEntry = { "NEIL", {"+45.67","-23.24","-456.8","19:44:21"} };
     const degrees expectedLatitude = 45.67;
     const degrees expectedLongitude = -23.24;
     const degrees expectedAltitude = -456.8;
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE( Longitude_above_90 )
 
 BOOST_AUTO_TEST_CASE( ZeroValues )
 {
-    const DataReading dataEntry = { "NEIL", {"+0.0","-0.00","0.00"} };
+    const DataReading dataEntry = { "NEIL", {"+0.0","-0.00","0.00","19:44:21"} };
 
     Waypoint actualWaypoint = extractWaypointFromReading(dataEntry);
 
@@ -113,21 +113,21 @@ BOOST_AUTO_TEST_CASE( ZeroValues )
 
 BOOST_AUTO_TEST_CASE( InvalidAltitudeText )
 {
-    const DataReading dataEntry = { "NEIL", {"86.24","-23.24","in orbit"} };
+    const DataReading dataEntry = { "NEIL", {"86.24","-23.24","in orbit","19:44:21"} };
 
     BOOST_CHECK_THROW( extractWaypointFromReading(dataEntry) , std::domain_error );
 }
 
 BOOST_AUTO_TEST_CASE( InvalidLatitudeText )
 {
-    const DataReading dataEntry = { "NEIL", {"far north","-23.24","231.56"} };
+    const DataReading dataEntry = { "NEIL", {"far north","-23.24","231.56","19:44:21"} };
 
     BOOST_CHECK_THROW( extractWaypointFromReading(dataEntry) , std::domain_error );
 }
 
 BOOST_AUTO_TEST_CASE( InvalidLongitudeText )
 {
-    const DataReading dataEntry = { "NEIL", {"24.78","far east","231.56"} };
+    const DataReading dataEntry = { "NEIL", {"24.78","far east","231.56","19:44:21"} };
 
     BOOST_CHECK_THROW( extractWaypointFromReading(dataEntry) , std::domain_error );
 }

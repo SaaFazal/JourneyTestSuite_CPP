@@ -12,7 +12,7 @@ BOOST_AUTO_TEST_SUITE( HasCorrectNumberOfFields )
 
 BOOST_AUTO_TEST_CASE( CorrectFieldsNEIL )
 {
-    const DataReading theDataReading = { "NEIL", {"+45.67","-23.24","231.56"} };
+    const DataReading theDataReading = { "NEIL", {"+45.67","-23.24","231.56","19:44:21"} };
 
     BOOST_CHECK( hasCorrectNumberOfFields(theDataReading) );
 }

@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE( ExtraPrefixesNotAccepted )
 
 BOOST_AUTO_TEST_CASE( FullDataReadingTextNotAccepted )
 {
-    BOOST_CHECK( ! isKnownFormat("#NEIL|+45.67,-23.24,231.56|105;") );
+    BOOST_CHECK( ! isKnownFormat("#NEIL|+45.67,-23.24,231.56,19:44:21|059;") );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
