@@ -5,6 +5,8 @@ CONFIG -= qt
 
 QMAKE_CXXFLAGS += -std=c++20 -Wall -Wfatal-errors
 
+
+//testing
 OBJECTS_DIR = $$_PRO_FILE_PWD_/bin/
 DESTDIR = $$_PRO_FILE_PWD_/bin/
 TARGET = niva-parser-tests
