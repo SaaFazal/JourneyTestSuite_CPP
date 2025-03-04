@@ -97,8 +97,8 @@ namespace NIVA
   // Function Stub - to be implemented
   unsigned int computeChecksum(std::string s)
   {
-      unsigned int checksum = o;
-      for (char : s)
+      unsigned int checksum = 0;
+      for (char c : s)
       {
           checksum ^= static_cast<unsigned int>(c);
     }
