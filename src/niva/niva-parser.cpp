@@ -111,27 +111,36 @@ unsigned int computeChecksum(const std::string& s) {
 
 // Validates if the provided checksum matches the computed checksum
 bool hasMatchingChecksum(const std::string& s) {
-    size_t firstPipe = s.find('|');
+    // Find the positions of the first '~', last '|', and last ';'
+    size_t firstTilde = s.find('~');
     size_t lastPipe = s.find_last_of('|');
     size_t semicolon = s.find_last_of(';');
 
-    if (firstPipe == std::string::npos || lastPipe == std::string::npos || semicolon == std::string::npos || semicolon <= lastPipe + 1) {
-        return false; // Invalid format
+    // Validate the positions
+    if (firstTilde == std::string::npos || lastPipe == std::string::npos || semicolon == std::string::npos || semicolon <= lastPipe) {
+        return false; // Malformed input
     }
 
-    std::string data = s.substr(firstPipe + 1, lastPipe - firstPipe - 1);  // Extract actual data
+    // Extract the data from after '~' to before the last '|'
+    std::string data = s.substr(firstTilde + 1, lastPipe - firstTilde - 1);
+
+    // Extract the checksum between the last '|' and ';'
     std::string checksumStr = s.substr(lastPipe + 1, semicolon - lastPipe - 1);
 
+    // Validate that the checksum string is numeric
     if (!std::all_of(checksumStr.begin(), checksumStr.end(), ::isdigit)) {
-        return false;
+        return false; // Invalid checksum format
     }
 
-    unsigned int providedChecksum = std::stoul(checksumStr);
+    // Compute the checksum of the data
     unsigned int computedChecksum = computeChecksum(data);
 
+    // Convert the provided checksum to an integer
+    unsigned int providedChecksum = std::stoul(checksumStr);
+
+    // Compare the computed checksum with the provided checksum
     return computedChecksum == providedChecksum;
 }
-
 
   NIVA::DataReading parseDataReading(std::string s)
   {
