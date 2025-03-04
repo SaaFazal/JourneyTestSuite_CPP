@@ -96,72 +96,43 @@ namespace NIVA
   }
 
   // Function Stub - to be implemented
-  unsigned int computeChecksum(std::string s)
-  {
-      unsigned int checksum = 0;
-      for (char c : s)
-      {
-          checksum ^= static_cast<unsigned int>(c);
-    }
-    return checksum;
-  }
-
-  // Function Stub - to be implemented
-  bool hasMatchingChecksum(std::string s)
+  // Computes the checksum using XOR on all characters in the string.
+unsigned int computeChecksum(std::string s)
 {
-    // Find delimiters
+    unsigned int checksum = 0;
+    for (char c : s)
+    {
+        checksum += static_cast<unsigned int>(c);
+    }
+    return checksum % 256;  // Ensure checksum fits within 8 bits
+}
+
+
+// Validates if the provided checksum matches the computed checksum
+bool hasMatchingChecksum(std::string s)
+{
     size_t firstTilde = s.find('~');
     size_t lastPipe = s.find_last_of('|');
     size_t semicolon = s.find_last_of(';');
 
-    // Validate positions
-    if (firstTilde == std::string::npos || lastPipe == std::string::npos || semicolon == std::string::npos || semicolon <= lastPipe)
+    if (firstTilde == std::string::npos || lastPipe == std::string::npos || semicolon == std::string::npos || semicolon <= lastPipe + 1)
     {
-        std::cerr << "Error: Malformed input string" << std::endl;
         return false;
     }
 
-    // Extract data
     std::string data = s.substr(firstTilde + 1, lastPipe - firstTilde - 1);
-
-    // Extract checksum
     std::string checksumStr = s.substr(lastPipe + 1, semicolon - lastPipe - 1);
 
-    // Debugging: Print extracted values
-    std::cout << "Extracted Data: " << data << std::endl;
-    std::cout << "Extracted Checksum: " << checksumStr << std::endl;
-
-    // Validate checksum format
-    for (char c : checksumStr)
+    if (!std::all_of(checksumStr.begin(), checksumStr.end(), ::isdigit))
     {
-        if (!isdigit(c))
-        {
-            std::cerr << "Error: Invalid checksum format" << std::endl;
-            return false;
-        }
-    }
-
-    // Compute checksum of the data
-    unsigned int computedChecksum = computeChecksum(data);
-    std::cout << "Computed Checksum: " << computedChecksum << std::endl;
-
-    // Convert provided checksum safely
-    unsigned int providedChecksum;
-    try
-    {
-        providedChecksum = std::stoul(checksumStr);
-    }
-    catch (const std::exception&)
-    {
-        std::cout << "Error: Checksum conversion failed" << std::endl;
         return false;
     }
 
-    // Compare and return result
+    unsigned int providedChecksum = std::stoul(checksumStr);
+    unsigned int computedChecksum = computeChecksum(data);
+
     return computedChecksum == providedChecksum;
 }
-
-
 
   NIVA::DataReading parseDataReading(std::string s)
   {
