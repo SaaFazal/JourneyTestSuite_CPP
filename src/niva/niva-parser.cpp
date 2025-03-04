@@ -119,8 +119,8 @@ namespace NIVA
         return false; // Malformed input
     }
 
-    // Extract the data from the first '~' to the last '|' (inclusive)
-    std::string data = s.substr(firstTilde, lastPipe - firstTilde + 1);
+    // Extract the data between '~' and '|' (exclusive)
+    std::string data = s.substr(firstTilde + 1, lastPipe - firstTilde - 1);
 
     // Extract the checksum between the last '|' and ';'
     std::string checksumStr = s.substr(lastPipe + 1, semicolon - lastPipe - 1);
@@ -129,7 +129,15 @@ namespace NIVA
     unsigned int computedChecksum = computeChecksum(data);
 
     // Convert the provided checksum to an integer
-    unsigned int providedChecksum = std::stoul(checksumStr);
+    unsigned int providedChecksum;
+    try
+    {
+        providedChecksum = std::stoul(checksumStr);
+    }
+    catch (const std::invalid_argument&)
+    {
+        return false; // Invalid checksum format
+    }
 
     // Compare the computed checksum with the provided checksum
     return computedChecksum == providedChecksum;
