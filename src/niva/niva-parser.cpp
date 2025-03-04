@@ -98,11 +98,9 @@ namespace NIVA
   // Function Stub - to be implemented
   // Computes the checksum using XOR on all characters in the string.
 unsigned int computeChecksum(const std::string& s) {
-    if (s.empty()) return 0;  // Edge case for empty string
-
-    unsigned int checksum = static_cast<unsigned int>(s[0]); // Start with first char
-    for (size_t i = 1; i < s.length(); ++i) {
-        checksum ^= static_cast<unsigned int>(s[i]);  // XOR each character
+    unsigned int checksum = 0;  // Initialize checksum to 0
+    for (char c : s) {
+        checksum ^= static_cast<unsigned int>(c);  // XOR each character
     }
     return checksum;
 }
@@ -118,8 +116,8 @@ bool hasMatchingChecksum(const std::string& s) {
         return false; // Malformed input
     }
 
-    // Extract the data from '~' to the last '|' (inclusive)
-    std::string data = s.substr(firstTilde, lastPipe - firstTilde + 1);
+    // Extract the data from after '~' to before the last '|'
+    std::string data = s.substr(firstTilde + 1, lastPipe - firstTilde - 1);
 
     // Extract the checksum between the last '|' and ';'
     std::string checksumStr = s.substr(lastPipe + 1, semicolon - lastPipe - 1);
@@ -138,7 +136,6 @@ bool hasMatchingChecksum(const std::string& s) {
     // Compare the computed checksum with the provided checksum
     return computedChecksum == providedChecksum;
 }
-
   NIVA::DataReading parseDataReading(std::string s)
   {
       unsigned int i;
