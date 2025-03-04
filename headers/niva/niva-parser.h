@@ -23,12 +23,12 @@ namespace GPS::NIVA
 
 
   // Compute the XOR reduction of all of the ASCII character codes in the provided raw text.
-unsigned int computeChecksum(const std::string& s);
+unsigned int computeChecksum(const std::string);
 
 // Check whether the (decimal notation) checksum value in the provided raw text of a NIVA data reading matches
 // the checksum computed from the raw text between the vertical bars.
 // Pre-condition: the provided string is a well-formed NIVA data reading.
-bool hasMatchingChecksum(const std::string& s);
+bool hasMatchingChecksum(const std::string);
 
 
 
