@@ -119,7 +119,7 @@ namespace NIVA
         return false; // Malformed input
     }
 
-    // Extract the data between '~' and '|' (exclusive)
+    // Extract the data from after '~' to before the last '|'
     std::string data = s.substr(firstTilde + 1, lastPipe - firstTilde - 1);
 
     // Extract the checksum between the last '|' and ';'
@@ -142,6 +142,7 @@ namespace NIVA
     // Compare the computed checksum with the provided checksum
     return computedChecksum == providedChecksum;
 }
+
   NIVA::DataReading parseDataReading(std::string s)
   {
       unsigned int i;
