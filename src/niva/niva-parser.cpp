@@ -97,15 +97,14 @@ namespace NIVA
 
   // Function Stub - to be implemented
   // Computes the checksum using XOR on all characters in the string.
-unsigned int computeChecksum(std::string s)
-{
+unsigned int computeChecksum(const std::string& s) {
     unsigned int checksum = 0;
-    for (char c : s)
-    {
-        checksum += static_cast<unsigned int>(c);
+    for (char c : s) {
+        checksum ^= static_cast<unsigned int>(c); // XOR each character
     }
-    return checksum % 256;  // Ensure checksum fits within 8 bits
+    return checksum;
 }
+
 
 
 // Validates if the provided checksum matches the computed checksum
