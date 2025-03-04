@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdexcept>
 #include <cmath>
 
@@ -152,7 +153,7 @@ namespace NIVA
     }
     catch (const std::exception&)
     {
-        std::cerr << "Error: Checksum conversion failed" << std::endl;
+        std::cout << "Error: Checksum conversion failed" << std::endl;
         return false;
     }
 
