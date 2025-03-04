@@ -107,9 +107,6 @@ unsigned int computeChecksum(const std::string& s) {
     return checksum;
 }
 
-
-
-// Validates if the provided checksum matches the computed checksum
 bool hasMatchingChecksum(const std::string& s) {
     // Find the positions of the first '~', last '|', and last ';'
     size_t firstTilde = s.find('~');
