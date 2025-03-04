@@ -116,8 +116,8 @@ bool hasMatchingChecksum(const std::string& s) {
         return false; // Malformed input
     }
 
-    // Extract the data from after '~' to before the last '|'
-    std::string data = s.substr(firstTilde + 1, lastPipe - firstTilde - 1);
+    // Extract the data from '~' to the last '|' (inclusive)
+    std::string data = s.substr(firstTilde, lastPipe - firstTilde + 1);
 
     // Extract the checksum between the last '|' and ';'
     std::string checksumStr = s.substr(lastPipe + 1, semicolon - lastPipe - 1);
