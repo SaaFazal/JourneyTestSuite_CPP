@@ -108,22 +108,32 @@ namespace NIVA
   // Function Stub - to be implemented
   bool hasMatchingChecksum(std::string s)
 {
+    // Find the positions of the first '~', last '|', and last ';'
+    size_t firstTilde = s.find('~');
     size_t lastPipe = s.find_last_of('|');
     size_t semicolon = s.find_last_of(';');
-    if (lastPipe == std::string::npos || semicolon == std::string::npos || semicolon <= lastPipe)
+
+    // Validate the positions
+    if (firstTilde == std::string::npos || lastPipe == std::string::npos || semicolon == std::string::npos || semicolon <= lastPipe)
     {
-        return false;
+        return false; // Malformed input
     }
 
-    std::string data = s.substr(0, lastPipe + 1); // Extract data between the first and last pipe
-    std::string checksumStr = s.substr(lastPipe + 1, semicolon - lastPipe - 1); // Extract checksum
+    // Extract the data between '~' and '|'
+    std::string data = s.substr(firstTilde, lastPipe - firstTilde + 1);
 
+    // Extract the checksum between '|' and ';'
+    std::string checksumStr = s.substr(lastPipe + 1, semicolon - lastPipe - 1);
+
+    // Compute the checksum of the data
     unsigned int computedChecksum = computeChecksum(data);
+
+    // Convert the provided checksum to an integer
     unsigned int providedChecksum = std::stoul(checksumStr);
 
+    // Compare the computed checksum with the provided checksum
     return computedChecksum == providedChecksum;
 }
-
   NIVA::DataReading parseDataReading(std::string s)
   {
       unsigned int i;
