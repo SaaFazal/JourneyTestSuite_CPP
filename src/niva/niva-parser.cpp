@@ -97,34 +97,32 @@ namespace NIVA
 
   // Function Stub - to be implemented
   // Computes the checksum using XOR on all characters in the string.
-unsigned int computeChecksum(std::string s)
-{
-    unsigned int checksum = 0;
-    for (char c : s)
-    {
-        checksum += static_cast<unsigned int>(c);
+unsigned int computeChecksum(const std::string& s) {
+    if (s.empty()) return 0;  // Edge case for empty string
+
+    unsigned int checksum = static_cast<unsigned int>(s[0]); // Start with first char
+    for (size_t i = 1; i < s.length(); ++i) {
+        checksum ^= static_cast<unsigned int>(s[i]);  // XOR each character
     }
-    return checksum % 256;  // Ensure checksum fits within 8 bits
+    return checksum;
 }
 
 
+
 // Validates if the provided checksum matches the computed checksum
-bool hasMatchingChecksum(std::string s)
-{
-    size_t firstTilde = s.find('~');
+bool hasMatchingChecksum(const std::string& s) {
+    size_t firstPipe = s.find('|');
     size_t lastPipe = s.find_last_of('|');
     size_t semicolon = s.find_last_of(';');
 
-    if (firstTilde == std::string::npos || lastPipe == std::string::npos || semicolon == std::string::npos || semicolon <= lastPipe + 1)
-    {
-        return false;
+    if (firstPipe == std::string::npos || lastPipe == std::string::npos || semicolon == std::string::npos || semicolon <= lastPipe + 1) {
+        return false; // Invalid format
     }
 
-    std::string data = s.substr(firstTilde + 1, lastPipe - firstTilde - 1);
+    std::string data = s.substr(firstPipe + 1, lastPipe - firstPipe - 1);  // Extract actual data
     std::string checksumStr = s.substr(lastPipe + 1, semicolon - lastPipe - 1);
 
-    if (!std::all_of(checksumStr.begin(), checksumStr.end(), ::isdigit))
-    {
+    if (!std::all_of(checksumStr.begin(), checksumStr.end(), ::isdigit)) {
         return false;
     }
 
@@ -133,6 +131,7 @@ bool hasMatchingChecksum(std::string s)
 
     return computedChecksum == providedChecksum;
 }
+
 
   NIVA::DataReading parseDataReading(std::string s)
   {
