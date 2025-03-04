@@ -129,7 +129,15 @@ namespace NIVA
     unsigned int computedChecksum = computeChecksum(data);
 
     // Convert the provided checksum to an integer
-    unsigned int providedChecksum = std::stoul(checksumStr);
+    unsigned int providedChecksum;
+    try
+    {
+        providedChecksum = std::stoul(checksumStr);
+    }
+    catch (const std::invalid_argument&)
+    {
+        return false; // Invalid checksum format
+    }
 
     // Compare the computed checksum with the provided checksum
     return computedChecksum == providedChecksum;
