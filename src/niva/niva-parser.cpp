@@ -106,10 +106,23 @@ namespace NIVA
   }
 
   // Function Stub - to be implemented
-  bool hasMatchingChecksum(string s)
-  {
-      return false;
-  }
+  bool hasMatchingChecksum(std::string s)
+{
+    size_t lastPipe = s.find_last_of('|');
+    size_t semicolon = s.find_last_of(';');
+    if (lastPipe == std::string::npos || semicolon == std::string::npos || semicolon <= lastPipe)
+    {
+        return false;
+    }
+
+    std::string data = s.substr(0, lastPipe + 1); // Extract data between the first and last pipe
+    std::string checksumStr = s.substr(lastPipe + 1, ); // Extract checksum
+
+    unsigned int computedChecksum = computeChecksum(data);
+    unsigned int providedChecksum = std::stoul(checksumStr);
+
+    return computedChecksum == providedChecksum;
+}
 
   NIVA::DataReading parseDataReading(std::string s)
   {
