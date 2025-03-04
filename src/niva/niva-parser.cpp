@@ -119,10 +119,10 @@ namespace NIVA
         return false; // Malformed input
     }
 
-    // Extract the data between '~' and '|'
+    // Extract the data from the first '~' to the last '|' (inclusive)
     std::string data = s.substr(firstTilde, lastPipe - firstTilde + 1);
 
-    // Extract the checksum between '|' and ';'
+    // Extract the checksum between the last '|' and ';'
     std::string checksumStr = s.substr(lastPipe + 1, semicolon - lastPipe - 1);
 
     // Compute the checksum of the data
