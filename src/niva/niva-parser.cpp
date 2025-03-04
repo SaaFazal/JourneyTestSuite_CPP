@@ -116,7 +116,7 @@ namespace NIVA
     }
 
     std::string data = s.substr(0, lastPipe + 1); // Extract data between the first and last pipe
-    std::string checksumStr = s.substr(lastPipe + 1, ); // Extract checksum
+    std::string checksumStr = s.substr(lastPipe + 1, semicolon - lastPipe - 1); // Extract checksum
 
     unsigned int computedChecksum = computeChecksum(data);
     unsigned int providedChecksum = std::stoul(checksumStr);
