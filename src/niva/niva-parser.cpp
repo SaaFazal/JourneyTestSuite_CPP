@@ -440,12 +440,30 @@ namespace NIVA
       }
   }
 
-  // Function Stub - to be implemented
-  std::vector<Waypoint> extractWaypointsFromLog(std::istream& is)
+  // Implementation for extractWaypointsFromLog
+  std::vectorGPS::Waypoint extractWaypointsFromLog(std::istream& is)
   {
-      return {};
-  }
+      std::vector<Waypoint> waypoints;
+      std::string content;
+      std::string line;
 
+          // Read the entire file line by line and concatenate
+          while (std::getline(is, line)) {
+          content += line + "\\n";
+      }
+
+      size_t pos = 0;
+      while (pos < content.length()) {
+          // Find the start of a NIVA reading
+          size_t startPos = content.find('~', pos);
+          if (startPos == std::string::npos) break;
+
+          // Find the end of the reading (the semicolon)
+          size_t endPos = content.find(';', startPos);
+          if (endPos == std::string::npos) break;
+
+          // Extract the complete reading
+          std::string reading = content.substr(startPos, endPos - startPos + 1);;
 }
 
 }
