@@ -464,6 +464,30 @@ namespace NIVA
 
           // Extract the complete reading
           std::string reading = content.substr(startPos, endPos - startPos + 1);;
+          // Process the reading if it's well-formed
+          if (isWellformedDataReading(reading)) {
+              try {
+                  DataReading dataReading = parseDataReading(reading);
+
+                  if (isKnownFormat(dataReading.format) && hasCorrectNumberOfFields(dataReading)) {
+                      try {
+                          Waypoint waypoint = extractWaypointFromReading(dataReading);
+                          waypoints.push_back(waypoint);
+                      } catch (const std::exception&) {
+                          // Skip readings with invalid field values
+                      }
+                  }
+              } catch (const std::exception&) {
+                  // Skip readings that can't be parsed
+              }
+          }
+
+          // Move to position after the current reading
+          pos = endPos + 1;
+      }
+
+      return waypoints;
+
 }
 
 }
