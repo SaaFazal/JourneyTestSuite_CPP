@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <stdexcept>
 #include <cmath>
 
@@ -96,44 +97,40 @@ namespace NIVA
   }
 
   // Function Stub - to be implemented
-  // Computes the checksum using XOR on all characters in the string.
-unsigned int computeChecksum(const std::string s) {
-    unsigned int checksum = 0;  // Initialize checksum to 0
-    for (char c : s) {
-        checksum ^= static_cast<unsigned int>(c);  // XOR each character
+  // Implementation for computeChecksum
+  unsigned int computeChecksum(std::string s)
+  {
+    unsigned int checksum = 0;
+    // XOR reduction of all ASCII character codes
+    for (size_t i = 0; i < s.length(); ++i) {
+    checksum ^= static_cast<unsigned int>(s[i]);
     }
-    return checksum;
-}
+      return checksum;
+  }
 
-bool hasMatchingChecksum(const std::string s) {
-    // Find the positions of the first '~', last '|', and last ';'
-    size_t lastPipe = s.rfind('|');
-    size_t semicolon = s.rfind(';');
 
-    // Validate the positions
-    if (lastPipe = std::string::npos || semicolon == std::string::npos || lastPipe >= semicolon) {
-        return false; // Malformed input
-    }
+  // Implementation for hasMatchingChecksum
+  bool hasMatchingChecksum(std::string s)
+  {
+      // Precondition: s is a well-formed NIVA data reading
 
-    // Extract the data and the checksum
-    std::string data = s.substr(0, lastPipe);
+      // Find the position of the last vertical bar
+      size_t lastBarPos = s.find_last_of('|', s.find(';') - 1);
 
-    // Extract the checksum between the last '|' and ';'
-    std::string checksumStr = s.substr(lastPipe + 1, semicolon - lastPipe - 1);
+      // Extract the data between the first and last vertical bars
+      size_t firstBarPos = s.find('|');
+      std::string dataSection = s.substr(firstBarPos + 1, lastBarPos - firstBarPos - 1);
 
-    // Calculate the checksum
-    unsigned int calculatedChecksum = computeChecksum(data.substr(data.find('|') + 1));
+      // Extract the checksum from the string
+      std::string checksumStr = s.substr(lastBarPos + 1, 3);
+      unsigned int providedChecksum = std::stoi(checksumStr);
 
-    // Convert the checksum string to an integer
-    try {
-        unsigned int providedChecksum = std::stoi(checksumStr);
-        return calculatedChecksum == providedChecksum;
-    } catch (const std::invalid_argument& e){
-        return false;
-    } catch (const std::out_of_range& e){
-        return false;
-    }
-}
+      // Compute the checksum of the data section
+      unsigned int calculatedChecksum = computeChecksum(dataSection);
+
+      // Compare the checksums
+      return providedChecksum == calculatedChecksum;
+  }
   NIVA::DataReading parseDataReading(std::string s)
   {
       unsigned int i;
