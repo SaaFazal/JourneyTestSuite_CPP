@@ -441,7 +441,7 @@ namespace NIVA
   }
 
   // Implementation for extractWaypointsFromLog
-  std::vectorGPS::Waypoint extractWaypointsFromLog(std::istream& is)
+  std::vector<GPS::Waypoint> extractWaypointsFromLog(std::istream& is)
   {
       std::vector<Waypoint> waypoints;
       std::string content;
@@ -463,7 +463,8 @@ namespace NIVA
           if (endPos == std::string::npos) break;
 
           // Extract the complete reading
-          std::string reading = content.substr(startPos, endPos - startPos + 1);;
+          std::string reading = content.substr(startPos, endPos - startPos + 1);
+
           // Process the reading if it's well-formed
           if (isWellformedDataReading(reading)) {
               try {
@@ -487,7 +488,6 @@ namespace NIVA
       }
 
       return waypoints;
-
-}
-
+  }
+  }
 }
