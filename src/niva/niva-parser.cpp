@@ -195,6 +195,25 @@ double parseCoordinate(const std::string& coord) {
         throw std::domain_error("Invalid coordinate value: " + coord);
     }
 }
+double parseDMS(const std::string& dms) {
+    size_t degPos = dms.find('o');
+    size_t minPos = dms.find('\'');
+    size_t secPos = dms.find('"');
+
+    if (degPos == std::string::npos || minPos == std::string::npos || secPos == std::string::npos) {
+        throw std::domain_error("Invalid DMS format: " + dms);
+    }
+
+    // Extract degrees, minutes, and seconds
+    int degrees = std::stoi(dms.substr(0, degPos));
+    int minutes = std::stoi(dms.substr(degPos + 1, minPos - (degPos + 1)));
+    int seconds = std::stoi(dms.substr(minPos + 1, secPos - (minPos + 1)));
+
+    // Convert DMS to decimal degrees
+    double decimalDegrees = degrees + (minutes / 60.0) + (seconds / 3600.0);
+
+    return decimalDegrees;
+}
 
 GPS::Waypoint extractWaypointFromReading(const NIVA::DataReading& d) {
     // Handle NEIL format
@@ -213,9 +232,37 @@ GPS::Waypoint extractWaypointFromReading(const NIVA::DataReading& d) {
     }
     // Handle ISMA format
     else if (d.format == "ISMA") {
-        double lat = parseCoordinate(d.dataFields[0]);
-        double lon = parseCoordinate(d.dataFields[2]);
+        // Parse latitude in DMS format
+        double lat = parseDMS(d.dataFields[0]);
+        std::string latBearing = d.dataFields[1];
+        if (latBearing != "N" && latBearing != "S") {
+            throw std::domain_error("Invalid latitude bearing: " + latBearing);
+        }
+        if (latBearing == "S") {
+            lat = -lat; // Apply bearing for southern hemisphere
+        }
+
+        // Parse longitude in DMS format
+        double lon = parseDMS(d.dataFields[2]);
+        std::string lonBearing = d.dataFields[3];
+        if (lonBearing != "E" && lonBearing != "W") {
+            throw std::domain_error("Invalid longitude bearing: " + lonBearing);
+        }
+        if (lonBearing == "W") {
+            lon = -lon; // Apply bearing for western hemisphere
+        }
+
+        // Parse altitude
         double alt = parseCoordinate(d.dataFields[4]);
+
+        // Validate latitude and longitude ranges
+        if (lat < -90.0 || lat > 90.0) {
+            throw std::invalid_argument("Latitude values must not exceed 90.000000 degrees.");
+        }
+        if (lon < -180.0 || lon > 180.0) {
+            throw std::invalid_argument("Longitude values must not exceed 180.000000 degrees.");
+        }
+
         return GPS::Waypoint(lat, lon, alt);
     }
     // Throw an exception for unknown formats
