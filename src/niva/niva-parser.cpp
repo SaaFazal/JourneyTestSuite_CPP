@@ -1,7 +1,9 @@
 #include <iostream>
-#include <algorithm>
+#include <algorithm> // For std::transform
 #include <stdexcept>
 #include <cmath>
+#include <set> // Add this line
+#include <string> // For std::string
 
 #include "geometry.h"
 #include "niva/niva-parser.h"
@@ -13,32 +15,22 @@ namespace NIVA
 {
   using namespace std;
 
-  bool isKnownFormat(string s)
-  {
-      if (s.size() != 4)
-      {
-          return false;
-      }
+bool isKnownFormat(const std::string& s) {
+    // Check if the input string has exactly 4 characters
+    if (s.size() != 4) {
+        return false;
+    }
 
-      // Convert to upper case.
-      for (unsigned int i = 0; i < 4; ++i)
-      {
-          if (s[i] >= 'a' && s[i] <= 'z')
-          {
-              s[i] = s[i] - 32;
-          }
-      }
+    // Convert the input string to uppercase
+    std::string format = s;
+    std::transform(format.begin(), format.end(), format.begin(), ::toupper);
 
-      if (s == "NEIL" || s == "NUNO" || s == "ISMA")
-      {
-          return true;
-      }
-      else
-      {
-          return false;
-      }
-  }
+    // Define a set of known formats for easy lookup
+    static const std::set<std::string> knownFormats = {"NEIL", "NUNO", "ISMA"};
 
+    // Check if the format is in the set of known formats
+    return knownFormats.find(format) != knownFormats.end();
+}
   bool isWellformedDataReading(string s)
   {
       char c;
