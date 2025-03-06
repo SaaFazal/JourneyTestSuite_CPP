@@ -18,7 +18,7 @@ namespace GPS::NIVA
 
   // Check whether the provided string is in the general form of a NIVA data reading.
   // Does not check the details of any specific NIVA format.
-  bool isWellformedDataReading(std::string);
+  bool isKnownFormat(const std::string& s);
 
 
 
