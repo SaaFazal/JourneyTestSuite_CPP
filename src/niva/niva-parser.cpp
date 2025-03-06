@@ -27,6 +27,30 @@ unsigned int computeChecksum(const std::string& s) {
 unsigned int computeChecksum(const char* s) {
     return computeChecksum(std::string(s));
 }
+// Overload for std::string
+bool hasMatchingChecksum(const std::string& s) {
+    // Find the position of the last vertical bar
+    size_t lastBarPos = s.find_last_of('|', s.find(';') - 1);
+
+    // Extract the data between the first and last vertical bars
+    size_t firstBarPos = s.find('|');
+    std::string dataSection = s.substr(firstBarPos + 1, lastBarPos - firstBarPos - 1);
+
+    // Extract the checksum from the string
+    std::string checksumStr = s.substr(lastBarPos + 1, 3);
+    unsigned int providedChecksum = std::stoi(checksumStr);
+
+    // Compute the checksum of the data section
+    unsigned int calculatedChecksum = computeChecksum(dataSection);
+
+    // Compare the checksums
+    return providedChecksum == calculatedChecksum;
+}
+
+// Overload for const char* (to handle string literals)
+bool hasMatchingChecksum(const char* s) {
+    return hasMatchingChecksum(std::string(s));
+}
 
 // Overload for std::string
 bool isKnownFormat(const std::string& s) {

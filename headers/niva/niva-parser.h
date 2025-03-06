@@ -24,7 +24,8 @@ unsigned int computeChecksum(const char* s);        // Overload for string liter
 // Check whether the (decimal notation) checksum value in the provided raw text of a NIVA data reading matches
 // the checksum computed from the raw text between the vertical bars.
 // Pre-condition: the provided string is a well-formed NIVA data reading.
-bool hasMatchingChecksum(const std::string& s);
+bool hasMatchingChecksum(const std::string& s); // For std::string
+bool hasMatchingChecksum(const char* s);        // Overload for string literals
 
 // Parses the raw text of a NIVA data reading and stores the contents in a structured form in a NIVA::DataReading.
 // Pre-condition: the provided string is a well-formed NIVA data reading.
