@@ -103,10 +103,26 @@ bool isWellformedDataReading(const std::string& s) {
         return false;
     }
 
-    // Validate the checksum (must be 3 digits between the last '|' and ';')
+    // Validate the checksum (must be exactly 3 digits between the last '|' and ';')
+    size_t checksumLength = semicolon - (lastPipe + 1);
+    if (checksumLength != 3) {
+        return false; // Checksum must be exactly 3 digits
+    }
     for (size_t i = lastPipe + 1; i < semicolon; ++i) {
         if (!isdigit(s[i])) {
-            return false;
+            return false; // Checksum must consist of digits
+        }
+    }
+
+    // Validate that reserved characters (~, ;, |) are not present in the data fields
+    size_t firstPipe = s.find('|');
+    size_t dataSectionStart = firstPipe + 1;
+    size_t dataSectionEnd = lastPipe;
+
+    for (size_t i = dataSectionStart; i < dataSectionEnd; ++i) {
+        char c = s[i];
+        if (c == '~' || c == ';' || c == '|') {
+            return false; // Reserved characters are not allowed in data fields
         }
     }
 
