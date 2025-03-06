@@ -153,8 +153,16 @@ NIVA::DataReading parseDataReading(const std::string& s) {
         }
 
         // Extract the field and add it to the vector
-        fields.push_back(s.substr(start, nextComma - start));
+        std::string field = s.substr(start, nextComma - start);
+        fields.push_back(field);
+
+        // Move to the next field
         start = nextComma + 1;
+    }
+
+    // Handle trailing commas (empty fields at the end)
+    if (start == end && s[start - 1] == ',') {
+        fields.push_back(""); // Add an empty field for the trailing comma
     }
 
     // Return the parsed data reading
