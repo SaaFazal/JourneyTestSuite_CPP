@@ -196,23 +196,27 @@ double parseCoordinate(const std::string& coord) {
     }
 }
 double parseDMS(const std::string& dms) {
-    size_t degPos = dms.find('o');
-    size_t minPos = dms.find('\'');
-    size_t secPos = dms.find('"');
+    try {
+        size_t degPos = dms.find('o');
+        size_t minPos = dms.find('\'');
+        size_t secPos = dms.find('"');
 
-    if (degPos == std::string::npos || minPos == std::string::npos || secPos == std::string::npos) {
-        throw std::domain_error("Invalid DMS format: " + dms);
+        if (degPos == std::string::npos || minPos == std::string::npos || secPos == std::string::npos) {
+            throw std::domain_error("Invalid DMS format: missing delimiters in " + dms);
+        }
+
+        int degrees = std::stoi(dms.substr(0, degPos));
+        int minutes = std::stoi(dms.substr(degPos + 1, minPos - (degPos + 1)));
+        int seconds = std::stoi(dms.substr(minPos + 1, secPos - (minPos + 1)));
+
+        if (degrees < 0 || minutes < 0 || seconds < 0) {
+            throw std::domain_error("Invalid DMS values: negative values in " + dms);
+        }
+
+        return degrees + (minutes / 60.0) + (seconds / 3600.0);
+    } catch (const std::exception& e) {
+        throw std::domain_error("Failed to parse DMS: " + std::string(e.what()));
     }
-
-    // Extract degrees, minutes, and seconds
-    int degrees = std::stoi(dms.substr(0, degPos));
-    int minutes = std::stoi(dms.substr(degPos + 1, minPos - (degPos + 1)));
-    int seconds = std::stoi(dms.substr(minPos + 1, secPos - (minPos + 1)));
-
-    // Convert DMS to decimal degrees
-    double decimalDegrees = degrees + (minutes / 60.0) + (seconds / 3600.0);
-
-    return decimalDegrees;
 }
 
 GPS::Waypoint extractWaypointFromReading(const NIVA::DataReading& d) {
