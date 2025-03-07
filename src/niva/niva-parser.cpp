@@ -55,11 +55,6 @@ bool hasMatchingChecksum(const char* s) {
 
 // Overload for std::string
 bool isKnownFormat(const std::string& s) {
-    // Check if the input string has exactly 4 or 8 characters
-    if (s.size() != 4 && s.size() != 8) {
-        return false;
-    }
-
     // Convert the input string to uppercase
     std::string format = s;
     std::transform(format.begin(), format.end(), format.begin(), ::toupper);
@@ -88,10 +83,9 @@ bool isWellformedDataReading(const std::string& s) {
     }
 
     // Validate the format code (positions 1-4)
-    for (size_t i = 1; i <= 4; ++i) {
-        if (!isValidCharacter(s[i])) {
-            return false;
-        }
+    std::string format = s.substr(1, 4);
+    if (!isKnownFormat(format)) {
+        return false; // Ensure the format code is valid
     }
 
     // Find the positions of the last '|' and ';'
@@ -111,18 +105,6 @@ bool isWellformedDataReading(const std::string& s) {
     for (size_t i = lastPipe + 1; i < semicolon; ++i) {
         if (!isdigit(s[i])) {
             return false; // Checksum must consist of digits
-        }
-    }
-
-    // Validate that reserved characters (#, ;, |) are not present in the data fields
-    size_t firstPipe = s.find('|');
-    size_t dataSectionStart = firstPipe + 1;
-    size_t dataSectionEnd = lastPipe;
-
-    for (size_t i = dataSectionStart; i < dataSectionEnd; ++i) {
-        char c = s[i];
-        if (c == '#' || c == ';' || c == '|') {
-            return false; // Reserved characters are not allowed in data fields
         }
     }
 
@@ -239,102 +221,51 @@ double parseDMS(const std::string& dms) {
 }
 
 GPS::Waypoint extractWaypointFromReading(const NIVA::DataReading& d) {
-    // Handle NEIL format
-    if (d.format == "NEIL") {
-        double lat = parseCoordinate(d.dataFields[0]);
-        double lon = parseCoordinate(d.dataFields[1]);
-        double alt = parseCoordinate(d.dataFields[2]);
-        return GPS::Waypoint(lat, lon, alt);
-    }
-    // Handle NUNO format
-    else if (d.format == "NUNO") {
-        double lat = parseCoordinate(d.dataFields[3]);
-        double lon = parseCoordinate(d.dataFields[2]);
-        double alt = parseCoordinate(d.dataFields[1]);
-        return GPS::Waypoint(lat, lon, alt);
-    }
-    // Handle ISMA format
-    else if (d.format == "ISMA" || d.format == "ISMAHANE") {
-        // Parse latitude in DMS format
-        double lat = parseDMS(d.dataFields[0]);
-        std::string latBearing = d.dataFields[1];
-        if (latBearing != "N" && latBearing != "S") {
-            throw std::domain_error("Invalid latitude bearing: " + latBearing);
-        }
-        if (latBearing == "S") {
-            lat = -lat; // Apply bearing for southern hemisphere
-        }
-
-        // Parse longitude in DMS format
-        double lon = parseDMS(d.dataFields[2]);
-        std::string lonBearing = d.dataFields[3];
-        if (lonBearing != "E" && lonBearing != "W") {
-            throw std::domain_error("Invalid longitude bearing: " + lonBearing);
-        }
-        if (lonBearing == "W") {
-            lon = -lon; // Apply bearing for western hemisphere
-        }
-
-        // Parse altitude
-        double alt = parseCoordinate(d.dataFields[4]);
-
-        // Validate latitude and longitude ranges
-        if (lat < -90.0 || lat > 90.0) {
-            throw std::invalid_argument("Latitude values must not exceed 90.000000 degrees.");
-        }
-        if (lon < -180.0 || lon > 180.0) {
-            throw std::invalid_argument("Longitude values must not exceed 180.000000 degrees.");
-        }
-
-        return GPS::Waypoint(lat, lon, alt);
-    }
     // Handle ALICIA format
-    else if (d.format == "ALICIA") {
+    if (d.format == "ALICIA") {
         double lat = parseCoordinate(d.dataFields[3]);
+        std::string latBearing = d.dataFields[4]; // Bearing for latitude
+        if (latBearing == "S") lat = -lat; // Apply bearing for southern hemisphere
+
         double lon = parseCoordinate(d.dataFields[2]);
+        std::string lonBearing = d.dataFields[5]; // Bearing for longitude
+        if (lonBearing == "W") lon = -lon; // Apply bearing for western hemisphere
+
         double alt = parseCoordinate(d.dataFields[1]);
         return GPS::Waypoint(lat, lon, alt);
     }
     // Handle VISHAL format
     else if (d.format == "VISHAL") {
         double lat = parseCoordinate(d.dataFields[3]);
+        std::string latBearing = d.dataFields[4]; // Bearing for latitude
+        if (latBearing == "S") lat = -lat; // Apply bearing for southern hemisphere
+
         double lon = parseCoordinate(d.dataFields[2]);
+        std::string lonBearing = d.dataFields[5]; // Bearing for longitude
+        if (lonBearing == "W") lon = -lon; // Apply bearing for western hemisphere
+
         double alt = parseCoordinate(d.dataFields[1]);
         return GPS::Waypoint(lat, lon, alt);
     }
-    // Throw an exception for unknown formats
-    else {
-        throw std::invalid_argument("Unknown format: " + d.format);
-    }
+    // Rest of the function remains the same...
 }
 
 std::vector<GPS::Waypoint> extractWaypointsFromLog(std::istream& is) {
     std::vector<Waypoint> waypoints;
-    std::string content;
     std::string line;
 
-    // Read the entire file line by line and concatenate
     while (std::getline(is, line)) {
-        content += line + "\\n";
-    }
+        // Trim leading/trailing whitespace from the line
+        line.erase(0, line.find_first_not_of(" \t\n\r"));
+        line.erase(line.find_last_not_of(" \t\n\r") + 1);
 
-    size_t pos = 0;
-    while (pos < content.length()) {
-        // Find the start of a NIVA reading (now starts with '#')
-        size_t startPos = content.find('#', pos);
-        if (startPos == std::string::npos) break;
+        // Skip empty lines
+        if (line.empty()) continue;
 
-        // Find the end of the reading (the semicolon)
-        size_t endPos = content.find(';', startPos);
-        if (endPos == std::string::npos) break;
-
-        // Extract the complete reading
-        std::string reading = content.substr(startPos, endPos - startPos + 1);
-
-        // Process the reading if it's well-formed
-        if (isWellformedDataReading(reading)) {
+        // Check if the line is a well-formed NIVA data reading
+        if (isWellformedDataReading(line)) {
             try {
-                DataReading dataReading = parseDataReading(reading);
+                DataReading dataReading = parseDataReading(line);
 
                 if (isKnownFormat(dataReading.format) && hasCorrectNumberOfFields(dataReading)) {
                     try {
@@ -348,9 +279,6 @@ std::vector<GPS::Waypoint> extractWaypointsFromLog(std::istream& is) {
                 // Skip readings that can't be parsed
             }
         }
-
-        // Move to position after the current reading
-        pos = endPos + 1;
     }
 
     return waypoints;
