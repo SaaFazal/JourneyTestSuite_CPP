@@ -27,6 +27,7 @@ unsigned int computeChecksum(const std::string& s) {
 unsigned int computeChecksum(const char* s) {
     return computeChecksum(std::string(s));
 }
+
 // Overload for std::string
 bool hasMatchingChecksum(const std::string& s) {
     // Find the position of the last vertical bar
@@ -54,8 +55,8 @@ bool hasMatchingChecksum(const char* s) {
 
 // Overload for std::string
 bool isKnownFormat(const std::string& s) {
-    // Check if the input string has exactly 4 characters
-    if (s.size() != 4) {
+    // Check if the input string has exactly 4 or 8 characters
+    if (s.size() != 4 && s.size() != 8) {
         return false;
     }
 
@@ -64,7 +65,7 @@ bool isKnownFormat(const std::string& s) {
     std::transform(format.begin(), format.end(), format.begin(), ::toupper);
 
     // Define a set of known formats for easy lookup
-    static const std::set<std::string> knownFormats = {"NEIL", "NUNO", "ISMA"};
+    static const std::set<std::string> knownFormats = {"NEIL", "NUNO", "ISMA", "ISMAHANE", "ALICIA", "VISHAL"};
 
     // Check if the format is in the set of known formats
     return knownFormats.find(format) != knownFormats.end();
@@ -72,7 +73,6 @@ bool isKnownFormat(const std::string& s) {
 
 // Overload for const char* (to handle string literals)
 bool isKnownFormat(const char* s) {
-    // Convert the C-string to a std::string and call the existing function
     return isKnownFormat(std::string(s));
 }
 
@@ -82,8 +82,8 @@ bool isValidCharacter(char c) {
 }
 
 bool isWellformedDataReading(const std::string& s) {
-    // Check basic structure: must start with '~', have at least 6 characters, and have a '|' at position 5
-    if (s.empty() || s[0] != '~' || s.size() < 6 || s[5] != '|') {
+    // Check basic structure: must start with '#', have at least 6 characters, and have a '|' at position 5
+    if (s.empty() || s[0] != '#' || s.size() < 6 || s[5] != '|') {
         return false;
     }
 
@@ -114,14 +114,14 @@ bool isWellformedDataReading(const std::string& s) {
         }
     }
 
-    // Validate that reserved characters (~, ;, |) are not present in the data fields
+    // Validate that reserved characters (#, ;, |) are not present in the data fields
     size_t firstPipe = s.find('|');
     size_t dataSectionStart = firstPipe + 1;
     size_t dataSectionEnd = lastPipe;
 
     for (size_t i = dataSectionStart; i < dataSectionEnd; ++i) {
         char c = s[i];
-        if (c == '~' || c == ';' || c == '|') {
+        if (c == '#' || c == ';' || c == '|') {
             return false; // Reserved characters are not allowed in data fields
         }
     }
@@ -130,13 +130,18 @@ bool isWellformedDataReading(const std::string& s) {
 }
 
 NIVA::DataReading parseDataReading(const std::string& s) {
+    // Check if the string starts with '#'
+    if (s.empty() || s[0] != '#') {
+        throw std::invalid_argument("Invalid NIVA data reading: must start with '#'.");
+    }
+
     // Find the position of the first '|'
     size_t firstPipe = s.find('|');
     if (firstPipe == std::string::npos || firstPipe < 5) {
         throw std::invalid_argument("Invalid NIVA data reading: missing format code or fields.");
     }
 
-    // Extract the format code (characters between '~' and the first '|')
+    // Extract the format code (characters between '#' and the first '|')
     std::string format = s.substr(1, firstPipe - 1);
     std::transform(format.begin(), format.end(), format.begin(), ::toupper);
 
@@ -181,6 +186,12 @@ bool hasCorrectNumberOfFields(const NIVA::DataReading& d) {
         return true;
     } else if (format == "ISMA" && d.dataFields.size() == 5) {
         return true;
+    } else if (format == "ISMAHANE" && d.dataFields.size() == 5) {
+        return true;
+    } else if (format == "ALICIA" && d.dataFields.size() == 4) {
+        return true;
+    } else if (format == "VISHAL" && d.dataFields.size() == 5) {
+        return true;
     }
 
     // If the format is unknown or the number of fields is incorrect, return false
@@ -195,6 +206,7 @@ double parseCoordinate(const std::string& coord) {
         throw std::domain_error("Invalid coordinate value: " + coord);
     }
 }
+
 double parseDMS(const std::string& dms) {
     try {
         // Find the positions of the degree, minute, and second delimiters
@@ -242,7 +254,7 @@ GPS::Waypoint extractWaypointFromReading(const NIVA::DataReading& d) {
         return GPS::Waypoint(lat, lon, alt);
     }
     // Handle ISMA format
-    else if (d.format == "ISMA") {
+    else if (d.format == "ISMA" || d.format == "ISMAHANE") {
         // Parse latitude in DMS format
         double lat = parseDMS(d.dataFields[0]);
         std::string latBearing = d.dataFields[1];
@@ -276,6 +288,20 @@ GPS::Waypoint extractWaypointFromReading(const NIVA::DataReading& d) {
 
         return GPS::Waypoint(lat, lon, alt);
     }
+    // Handle ALICIA format
+    else if (d.format == "ALICIA") {
+        double lat = parseCoordinate(d.dataFields[3]);
+        double lon = parseCoordinate(d.dataFields[2]);
+        double alt = parseCoordinate(d.dataFields[1]);
+        return GPS::Waypoint(lat, lon, alt);
+    }
+    // Handle VISHAL format
+    else if (d.format == "VISHAL") {
+        double lat = parseCoordinate(d.dataFields[3]);
+        double lon = parseCoordinate(d.dataFields[2]);
+        double alt = parseCoordinate(d.dataFields[1]);
+        return GPS::Waypoint(lat, lon, alt);
+    }
     // Throw an exception for unknown formats
     else {
         throw std::invalid_argument("Unknown format: " + d.format);
@@ -294,8 +320,8 @@ std::vector<GPS::Waypoint> extractWaypointsFromLog(std::istream& is) {
 
     size_t pos = 0;
     while (pos < content.length()) {
-        // Find the start of a NIVA reading
-        size_t startPos = content.find('~', pos);
+        // Find the start of a NIVA reading (now starts with '#')
+        size_t startPos = content.find('#', pos);
         if (startPos == std::string::npos) break;
 
         // Find the end of the reading (the semicolon)
